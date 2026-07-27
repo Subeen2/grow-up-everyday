@@ -1,13 +1,10 @@
-/*
- * NOTE: @fontsource/galmuri does not exist on the npm registry (npm install
- * returned 404). No network fetch tool is available in this environment to
- * download Galmuri11.woff2 from the upstream GitHub release, so the
- * @font-face declaration is intentionally omitted here. All font-family
- * rules below still reference 'Galmuri11' first; without a matching
- * @font-face they gracefully fall back to the sans-serif stack. A human
- * should add the @font-face block (and the woff2 file under public/fonts/
- * or via a working font package) to get the actual pixel font rendering.
- */
+@font-face {
+  font-family: 'Galmuri11';
+  src: url('/fonts/Galmuri11.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   --color-bg: #b8d8e8;
