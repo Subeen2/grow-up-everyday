@@ -5,6 +5,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   base: process.env.VITE_BASE_PATH || '/',
+  appType: 'mpa',
   plugins: [
     react(),
     VitePWA({
