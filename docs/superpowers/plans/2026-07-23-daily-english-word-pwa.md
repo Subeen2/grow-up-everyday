@@ -1,4 +1,4 @@
-# 매일 영단어 PWA Implementation Plan
+# 명예 외국인 PWA Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -151,7 +151,7 @@ export default defineConfig({
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>매일 영단어</title>
+    <title>명예 외국인</title>
   </head>
   <body>
     <div id="root"></div>
@@ -164,7 +164,7 @@ export default defineConfig({
 
 ```tsx
 export function App() {
-  return <h1>매일 영단어</h1>;
+  return <h1>명예 외국인</h1>;
 }
 ```
 
@@ -232,7 +232,7 @@ import { App } from './App';
 describe('App', () => {
   it('renders the app title', () => {
     render(<App />);
-    expect(screen.getByText('매일 영단어 앱')).toBeInTheDocument();
+    expect(screen.getByText('명예 외국인 앱')).toBeInTheDocument();
   });
 });
 ```
@@ -240,13 +240,13 @@ describe('App', () => {
 - [ ] **Step 3: 테스트 실행하여 실패 확인**
 
 Run: `npm test`
-Expected: FAIL — `App.tsx`가 "매일 영단어"만 렌더링하므로 "매일 영단어 앱" 텍스트를 찾지 못함
+Expected: FAIL — `App.tsx`가 "명예 외국인"만 렌더링하므로 "명예 외국인 앱" 텍스트를 찾지 못함
 
 - [ ] **Step 4: App.tsx 수정하여 텍스트 일치시키기**
 
 ```tsx
 export function App() {
-  return <h1>매일 영단어 앱</h1>;
+  return <h1>명예 외국인 앱</h1>;
 }
 ```
 
@@ -1062,7 +1062,7 @@ describe('App', () => {
 - [ ] **Step 2: 테스트 실행하여 실패 확인**
 
 Run: `npm test -- App`
-Expected: FAIL — 현재 `App.tsx`는 "매일 영단어 앱" 텍스트만 렌더링하므로 탭/버튼을 찾지 못함
+Expected: FAIL — 현재 `App.tsx`는 "명예 외국인 앱" 텍스트만 렌더링하므로 탭/버튼을 찾지 못함
 
 - [ ] **Step 3: App.tsx 최종 구현**
 
@@ -1080,7 +1080,7 @@ export function App() {
 
   return (
     <div className="app">
-      <h1>매일 영단어</h1>
+      <h1>명예 외국인</h1>
       <nav className="tab-bar">
         <PixelButton onClick={() => setTab('today')} aria-pressed={tab === 'today'}>
           오늘의 단어
@@ -1322,7 +1322,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['pwa-192x192.png', 'pwa-512x512.png'],
       manifest: {
-        name: '매일 영단어',
+        name: '명예 외국인',
         short_name: '영단어',
         description: '매일 일상 영단어를 픽셀아트로 만나보세요',
         theme_color: '#b8d8e8',
@@ -1772,7 +1772,7 @@ jobs:
 - [ ] **Step 3: README.md에 배포/운영 안내 작성**
 
 ```markdown
-# 매일 영단어
+# 명예 외국인
 
 매일 초중급 일상 회화체 영단어 1개를 픽셀아트 스타일로 보여주는 PWA입니다.
 

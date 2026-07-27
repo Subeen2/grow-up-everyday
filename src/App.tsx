@@ -11,7 +11,7 @@ export function App() {
 
   return (
     <div className="app">
-      <h1>매일 영단어</h1>
+      <h1>명예 외국인</h1>
       <nav className="tab-bar">
         <PixelButton onClick={() => setTab('today')} aria-pressed={tab === 'today'}>
           오늘의 단어
