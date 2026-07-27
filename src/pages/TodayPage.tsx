@@ -62,11 +62,25 @@ export function TodayPage() {
       console.warn(`Archive index references missing file for ${next.date}`);
       return;
     }
-    setState({ ...state, displayedEntry: entry, challengeVisible: false });
+    setState({
+      status: 'ready',
+      todayEntry,
+      displayedEntry: entry,
+      archivePool,
+      isNew,
+      challengeVisible: false,
+    });
   }
 
   function handleBackToToday() {
-    setState({ ...state, displayedEntry: todayEntry, challengeVisible: false });
+    setState({
+      status: 'ready',
+      todayEntry,
+      displayedEntry: todayEntry,
+      archivePool,
+      isNew,
+      challengeVisible: false,
+    });
   }
 
   return (
@@ -77,7 +91,16 @@ export function TodayPage() {
       {!challengeVisible && (
         <>
           <PixelButton
-            onClick={() => setState({ ...state, challengeVisible: true })}
+            onClick={() =>
+              setState({
+                status: 'ready',
+                todayEntry,
+                displayedEntry,
+                archivePool,
+                isNew,
+                challengeVisible: true,
+              })
+            }
             disabled={!hasOtherWord}
           >
             다른 단어 보기
