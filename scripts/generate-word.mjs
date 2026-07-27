@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import OpenAI from 'openai';
 import fs from 'node:fs/promises';
 import path from 'node:path';
