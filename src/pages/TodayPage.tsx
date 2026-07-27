@@ -57,7 +57,14 @@ export function TodayPage() {
   async function handleChallengeSuccess() {
     const next = pickRandomOtherWord(archivePool, displayedEntry.date);
     if (!next) return;
-    const entry = await fetchWordByDate(next.date);
+
+    let entry: WordEntry | null;
+    try {
+      entry = await fetchWordByDate(next.date);
+    } catch (err) {
+      console.warn(`Failed to fetch word for ${next.date}:`, err);
+      return;
+    }
     if (!entry) {
       console.warn(`Archive index references missing file for ${next.date}`);
       return;
@@ -85,7 +92,7 @@ export function TodayPage() {
 
   return (
     <div>
-      {isNew && <span className="new-badge">NEW</span>}
+      {isNew && isShowingToday && <span className="new-badge">NEW</span>}
       <WordCard entry={displayedEntry} />
       {!isShowingToday && <PixelButton onClick={handleBackToToday}>오늘의 단어로</PixelButton>}
       {!challengeVisible && (
