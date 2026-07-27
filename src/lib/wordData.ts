@@ -37,5 +37,3 @@ export async function fetchTodayWord(): Promise<WordEntry> {
   }
   return latest;
 }
-
-export type { WordEntry, ArchiveIndexItem };
