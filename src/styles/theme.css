@@ -88,3 +88,33 @@ body {
   cursor: pointer;
   font-family: 'Galmuri11', sans-serif;
 }
+
+.typing-challenge {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.typing-challenge__input {
+  font-family: 'Galmuri11', sans-serif;
+  border: 3px solid var(--color-wood-dark);
+  padding: 8px;
+  font-size: 1rem;
+}
+
+.typing-challenge__comparison {
+  background: #fff;
+  border: 2px solid var(--color-wood-dark);
+  padding: 8px;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.typing-challenge__submitted {
+  color: #b23b3b;
+}
+
+.typing-challenge__target {
+  color: var(--color-text);
+}
