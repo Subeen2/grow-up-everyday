@@ -8,9 +8,10 @@ export function buildPrompt(recentWords) {
 
   return [
     '너는 한국인 영어 학습자를 위한 "오늘의 단어" 콘텐츠를 만드는 도우미야.',
-    '초중급 수준의 일상 회화체에서 자주 쓰이는 영단어 또는 짧은 표현 1개를 골라줘.',
+    '중급~중고급 수준의 일상 회화체 단어 또는 표현 1개를 골라줘.',
+    '원어민이 실제로 자주 쓰는 관용표현, 구동사(phrasal verb), 연어(collocation)를 적극적으로 포함해줘 — 단순한 기초 단어는 피해줘.',
     '반드시 아래 JSON 형식으로만 응답해: {"word": string, "partOfSpeech": string, "pronunciationKo": string, "meaningKo": string, "exampleEn": string, "exampleKo": string}',
-    '- pronunciationKo는 한글 발음표기 (예: "어섬")',
+    '- pronunciationKo는 한글 발음표기 (예: "어썸")',
     '- exampleEn은 실생활에서 쓸 법한 자연스러운 짧은 문장',
     '- exampleKo는 exampleEn의 자연스러운 한국어 번역',
     avoidList,

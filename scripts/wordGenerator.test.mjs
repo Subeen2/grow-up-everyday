@@ -16,7 +16,7 @@ describe('parseWordResponse', () => {
   const validJson = JSON.stringify({
     word: ' awesome ',
     partOfSpeech: 'adjective',
-    pronunciationKo: '어섬',
+    pronunciationKo: '어썸',
     meaningKo: '정말 멋진',
     exampleEn: 'This place is awesome!',
     exampleKo: '이곳 정말 멋지다!',
@@ -26,7 +26,7 @@ describe('parseWordResponse', () => {
     expect(parseWordResponse(validJson)).toEqual({
       word: 'awesome',
       partOfSpeech: 'adjective',
-      pronunciationKo: '어섬',
+      pronunciationKo: '어썸',
       meaningKo: '정말 멋진',
       exampleEn: 'This place is awesome!',
       exampleKo: '이곳 정말 멋지다!',
@@ -66,7 +66,7 @@ describe('generateWordEntry', () => {
                   content: JSON.stringify({
                     word: 'awesome',
                     partOfSpeech: 'adjective',
-                    pronunciationKo: '어섬',
+                    pronunciationKo: '어썸',
                     meaningKo: '정말 멋진',
                     exampleEn: 'This place is awesome!',
                     exampleKo: '이곳 정말 멋지다!',

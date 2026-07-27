@@ -5,7 +5,7 @@ const sampleEntry = {
   date: '2026-07-23',
   word: 'awesome',
   partOfSpeech: 'adjective',
-  pronunciationKo: '어섬',
+  pronunciationKo: '어썸',
   meaningKo: '정말 멋진, 굉장한',
   exampleEn: 'This place is awesome!',
   exampleKo: '이곳 정말 멋지다!',
@@ -16,7 +16,7 @@ describe('WordCard', () => {
     render(<WordCard entry={sampleEntry} />);
     expect(screen.getByText('awesome')).toBeInTheDocument();
     expect(screen.getByText('adjective')).toBeInTheDocument();
-    expect(screen.getByText('[어섬]')).toBeInTheDocument();
+    expect(screen.getByText('[어썸]')).toBeInTheDocument();
     expect(screen.getByText('정말 멋진, 굉장한')).toBeInTheDocument();
     expect(screen.getByText('This place is awesome!')).toBeInTheDocument();
     expect(screen.getByText('이곳 정말 멋지다!')).toBeInTheDocument();

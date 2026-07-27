@@ -12,7 +12,7 @@ describe('ArchivePage', () => {
       date: '2026-07-23',
       word: 'awesome',
       partOfSpeech: 'adjective',
-      pronunciationKo: '어섬',
+      pronunciationKo: '어썸',
       meaningKo: '정말 멋진',
       exampleEn: 'x',
       exampleKo: 'y',

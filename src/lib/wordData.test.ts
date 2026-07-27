@@ -19,7 +19,7 @@ describe('fetchWordByDate', () => {
     date: '2026-07-23',
     word: 'awesome',
     partOfSpeech: 'adjective',
-    pronunciationKo: '어섬',
+    pronunciationKo: '어썸',
     meaningKo: '정말 멋진',
     exampleEn: 'x',
     exampleKo: 'y',
@@ -65,7 +65,7 @@ describe('fetchTodayWord', () => {
 
   it("returns today's entry when it exists", async () => {
     const todayStr = getLocalDateString();
-    const entry = { date: todayStr, word: 'awesome', partOfSpeech: 'adjective', pronunciationKo: '어섬', meaningKo: '정말 멋진', exampleEn: 'x', exampleKo: 'y' };
+    const entry = { date: todayStr, word: 'awesome', partOfSpeech: 'adjective', pronunciationKo: '어썸', meaningKo: '정말 멋진', exampleEn: 'x', exampleKo: 'y' };
     (fetch as any).mockResolvedValue({ ok: true, status: 200, json: async () => entry });
     expect(await fetchTodayWord()).toEqual(entry);
   });
