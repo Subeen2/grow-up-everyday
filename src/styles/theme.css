@@ -118,3 +118,8 @@ body {
 .typing-challenge__target {
   color: var(--color-text);
 }
+
+.typing-challenge__empty {
+  font-size: 0.85rem;
+  color: var(--color-wood-dark);
+}
