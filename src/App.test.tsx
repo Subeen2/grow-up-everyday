@@ -15,8 +15,9 @@ describe('App', () => {
       exampleEn: 'x',
       exampleKo: 'y',
     });
+    let resolveArchiveIndex!: (items: []) => void;
     vi.spyOn(wordData, 'fetchArchiveIndex').mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve([]), 10))
+      () => new Promise((resolve) => { resolveArchiveIndex = resolve; })
     );
     vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
     vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
@@ -25,7 +26,10 @@ describe('App', () => {
     expect(screen.getByText('오늘의 단어')).toBeInTheDocument();
 
     await userEvent.click(screen.getByText('아카이브'));
-    await waitFor(() => expect(screen.getByText('불러오는 중...')).toBeInTheDocument());
+    expect(screen.getByText('불러오는 중...')).toBeInTheDocument();
+
+    resolveArchiveIndex([]);
+    await waitFor(() => expect(screen.queryByText('불러오는 중...')).not.toBeInTheDocument());
   });
 
   it('requests notification permission when the bell button is clicked', async () => {
