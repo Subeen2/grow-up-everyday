@@ -123,3 +123,10 @@ body {
   font-size: 0.85rem;
   color: var(--color-wood-dark);
 }
+
+.pull-to-refresh__indicator {
+  text-align: center;
+  padding: 8px;
+  font-size: 0.85rem;
+  color: var(--color-wood-dark);
+}
