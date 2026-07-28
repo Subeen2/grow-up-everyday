@@ -22,11 +22,11 @@ describe('WordCard', () => {
     expect(screen.getByText('이곳 정말 멋지다!')).toBeInTheDocument();
   });
 
-  it('hides the example sentences when hideExample is true', () => {
-    render(<WordCard entry={sampleEntry} hideExample />);
+  it('hides only the English example when hideExampleEn is true, keeping the Korean translation as a hint', () => {
+    render(<WordCard entry={sampleEntry} hideExampleEn />);
     expect(screen.getByText('awesome')).toBeInTheDocument();
     expect(screen.getByText('정말 멋진, 굉장한')).toBeInTheDocument();
     expect(screen.queryByText('This place is awesome!')).not.toBeInTheDocument();
-    expect(screen.queryByText('이곳 정말 멋지다!')).not.toBeInTheDocument();
+    expect(screen.getByText('이곳 정말 멋지다!')).toBeInTheDocument();
   });
 });
