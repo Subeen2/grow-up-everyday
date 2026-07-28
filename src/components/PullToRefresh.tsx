@@ -15,7 +15,9 @@ export function PullToRefresh({
   const startYRef = useRef<number | null>(null);
 
   function handleTouchStart(e: TouchEvent) {
-    startYRef.current = window.scrollY <= 0 ? e.touches[0].clientY : null;
+    const target = e.target as HTMLElement;
+    const isFormField = target.closest('input, textarea, select, button, a');
+    startYRef.current = window.scrollY <= 0 && !isFormField ? e.touches[0].clientY : null;
   }
 
   function handleTouchMove(e: TouchEvent) {

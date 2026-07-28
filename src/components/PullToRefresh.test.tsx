@@ -63,6 +63,25 @@ describe('PullToRefresh', () => {
     expect(screen.queryByText('⬇️ 당겨서 새로고침')).not.toBeInTheDocument();
   });
 
+  it('does not track the pull when the touch starts inside a text input, so cursor placement still works', () => {
+    const onRefresh = vi.fn();
+    render(
+      <PullToRefresh onRefresh={onRefresh}>
+        <input type="text" defaultValue="hello world" />
+      </PullToRefresh>
+    );
+
+    const input = screen.getByRole('textbox');
+    fireEvent.touchStart(input, { touches: [{ clientY: 0 }] });
+    fireEvent.touchMove(input, { touches: [{ clientY: 40 }] });
+
+    expect(screen.queryByText('⬇️ 당겨서 새로고침')).not.toBeInTheDocument();
+    expect(screen.queryByText('⬆️ 놓으면 새로고침')).not.toBeInTheDocument();
+
+    fireEvent.touchEnd(input);
+    expect(onRefresh).not.toHaveBeenCalled();
+  });
+
   it('does not track the pull when the touch does not start at the top of the page', () => {
     Object.defineProperty(window, 'scrollY', { value: 100, configurable: true });
 
