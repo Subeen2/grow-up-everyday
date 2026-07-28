@@ -15,7 +15,7 @@ export function PullToRefresh({
   const startYRef = useRef<number | null>(null);
 
   function handleTouchStart(e: TouchEvent) {
-    startYRef.current = window.scrollY === 0 ? e.touches[0].clientY : null;
+    startYRef.current = window.scrollY <= 0 ? e.touches[0].clientY : null;
   }
 
   function handleTouchMove(e: TouchEvent) {
@@ -35,7 +35,12 @@ export function PullToRefresh({
   }
 
   return (
-    <div onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+    <div
+      className="pull-to-refresh"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {pullDistance > 0 && (
         <div
           className="pull-to-refresh__indicator"

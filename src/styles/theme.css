@@ -27,6 +27,11 @@ body {
   font-family: 'Galmuri11', sans-serif;
 }
 
+.pull-to-refresh {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
 .app {
   max-width: 480px;
   margin: 0 auto;
