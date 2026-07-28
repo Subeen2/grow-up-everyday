@@ -122,6 +122,7 @@ describe('TodayPage', () => {
 
     await waitFor(() => expect(screen.getByText('figure out')).toBeInTheDocument());
     expect(screen.getByText('오늘의 단어로')).toBeInTheDocument();
+    expect(screen.getByRole('status')).toBeInTheDocument();
 
     await userEvent.click(screen.getByText('오늘의 단어로'));
 

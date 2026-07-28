@@ -6,6 +6,7 @@ import { pickRandomOtherWord } from '../lib/typingChallenge';
 import { WordCard } from '../components/WordCard';
 import { PixelButton } from '../components/PixelButton';
 import { TypingChallenge } from '../components/TypingChallenge';
+import { Celebration } from '../components/Celebration';
 
 type State =
   | { status: 'loading' }
@@ -21,6 +22,7 @@ type State =
 
 export function TodayPage() {
   const [state, setState] = useState<State>({ status: 'loading' });
+  const [celebrating, setCelebrating] = useState(false);
 
   useEffect(() => {
     fetchTodayWord()
@@ -77,6 +79,7 @@ export function TodayPage() {
       isNew,
       challengeVisible: false,
     });
+    setCelebrating(true);
   }
 
   function handleBackToToday() {
@@ -118,6 +121,7 @@ export function TodayPage() {
       {challengeVisible && (
         <TypingChallenge targetSentence={displayedEntry.exampleEn} onSuccess={handleChallengeSuccess} />
       )}
+      {celebrating && <Celebration onDone={() => setCelebrating(false)} />}
     </div>
   );
 }
