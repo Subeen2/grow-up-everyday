@@ -2,9 +2,10 @@ import { WordEntry } from '../lib/wordTypes';
 
 interface WordCardProps {
   entry: WordEntry;
+  hideExample?: boolean;
 }
 
-export function WordCard({ entry }: WordCardProps) {
+export function WordCard({ entry, hideExample }: WordCardProps) {
   return (
     <div className="word-card">
       <p className="word-card__date">{entry.date}</p>
@@ -12,8 +13,12 @@ export function WordCard({ entry }: WordCardProps) {
       <p className="word-card__pos">{entry.partOfSpeech}</p>
       <p className="word-card__pronunciation">[{entry.pronunciationKo}]</p>
       <p className="word-card__meaning">{entry.meaningKo}</p>
-      <p className="word-card__example-en">{entry.exampleEn}</p>
-      <p className="word-card__example-ko">{entry.exampleKo}</p>
+      {!hideExample && (
+        <>
+          <p className="word-card__example-en">{entry.exampleEn}</p>
+          <p className="word-card__example-ko">{entry.exampleKo}</p>
+        </>
+      )}
     </div>
   );
 }

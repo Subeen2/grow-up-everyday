@@ -66,6 +66,28 @@ describe('TodayPage', () => {
     expect(screen.getByText('아직 연습할 다른 단어가 없어요')).toBeInTheDocument();
   });
 
+  it('hides the example sentence while the typing challenge is open, and reveals it again after returning to today', async () => {
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue({
+      ...todayEntry,
+      exampleEn: 'This place is awesome!',
+    });
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-07-23', word: 'awesome', meaningKo: '정말 멋진' },
+      { date: '2026-07-20', word: 'figure out', meaningKo: '알아내다' },
+    ]);
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+
+    render(<TodayPage />);
+
+    await waitFor(() => expect(screen.getByText('This place is awesome!')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByText('다른 단어 보기'));
+
+    expect(screen.queryByText('This place is awesome!')).not.toBeInTheDocument();
+    expect(screen.getByText('awesome')).toBeInTheDocument();
+  });
+
   it('shows the typing challenge after clicking "다른 단어 보기", swaps the word on a correct answer, and returns to today on request', async () => {
     const otherEntry = {
       date: '2026-07-20',
