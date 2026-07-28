@@ -15,6 +15,10 @@ const todayEntry = {
 };
 
 describe('TodayPage', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   it('shows the word once loaded', async () => {
     vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue(todayEntry);
     vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
@@ -128,5 +132,34 @@ describe('TodayPage', () => {
 
     await waitFor(() => expect(screen.getByText('awesome')).toBeInTheDocument());
     expect(screen.queryByText('오늘의 단어로')).not.toBeInTheDocument();
+  });
+
+  it('resumes showing the previously displayed word after remounting, instead of resetting to today', async () => {
+    const otherEntry = {
+      date: '2026-07-20',
+      word: 'figure out',
+      partOfSpeech: 'phrase',
+      pronunciationKo: '피겨 아웃',
+      meaningKo: '알아내다',
+      exampleEn: 'Let me figure it out.',
+      exampleKo: '내가 알아낼게.',
+    };
+
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue(todayEntry);
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-07-23', word: 'awesome', meaningKo: '정말 멋진' },
+      { date: '2026-07-20', word: 'figure out', meaningKo: '알아내다' },
+    ]);
+    vi.spyOn(wordData, 'fetchWordByDate').mockResolvedValue(otherEntry);
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+
+    localStorage.setItem('displayedWordDate', '2026-07-20');
+
+    render(<TodayPage />);
+
+    await waitFor(() => expect(screen.getByText('figure out')).toBeInTheDocument());
+    expect(screen.getByText('오늘의 단어로')).toBeInTheDocument();
+    expect(screen.queryByText('awesome')).not.toBeInTheDocument();
   });
 });

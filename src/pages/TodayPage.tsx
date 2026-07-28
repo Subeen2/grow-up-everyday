@@ -3,6 +3,7 @@ import { fetchTodayWord, fetchArchiveIndex, fetchWordByDate } from '../lib/wordD
 import { ArchiveIndexItem, WordEntry } from '../lib/wordTypes';
 import { isNewDaySinceLastView, setLastViewedDate } from '../lib/reminder';
 import { pickRandomOtherWord } from '../lib/typingChallenge';
+import { getPersistedDisplayedWordDate, setPersistedDisplayedWordDate } from '../lib/browsingState';
 import { WordCard } from '../components/WordCard';
 import { PixelButton } from '../components/PixelButton';
 import { TypingChallenge } from '../components/TypingChallenge';
@@ -37,10 +38,23 @@ export function TodayPage() {
           console.warn('Failed to fetch archive index for the typing challenge pool:', err);
         }
 
+        let displayedEntry = entry;
+        const persistedDate = getPersistedDisplayedWordDate();
+        if (persistedDate && persistedDate !== entry.date) {
+          try {
+            const persistedEntry = await fetchWordByDate(persistedDate);
+            if (persistedEntry) {
+              displayedEntry = persistedEntry;
+            }
+          } catch (err) {
+            console.warn(`Failed to resume previously displayed word for ${persistedDate}:`, err);
+          }
+        }
+
         setState({
           status: 'ready',
           todayEntry: entry,
-          displayedEntry: entry,
+          displayedEntry,
           archivePool,
           isNew,
           challengeVisible: false,
@@ -79,6 +93,7 @@ export function TodayPage() {
       isNew,
       challengeVisible: false,
     });
+    setPersistedDisplayedWordDate(entry.date);
     setCelebrating(true);
   }
 
@@ -91,6 +106,7 @@ export function TodayPage() {
       isNew,
       challengeVisible: false,
     });
+    setPersistedDisplayedWordDate(todayEntry.date);
   }
 
   return (
