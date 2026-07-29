@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { TodayPage } from './TodayPage';
 import * as wordData from '../lib/wordData';
 import * as reminder from '../lib/reminder';
+import { setPersistedDisplayedWordDate } from '../lib/browsingState';
 
 const todayEntry = {
   date: '2026-07-23',
@@ -154,12 +155,31 @@ describe('TodayPage', () => {
     vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
     vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
 
-    localStorage.setItem('displayedWordDate', '2026-07-20');
+    setPersistedDisplayedWordDate('2026-07-20', '2026-07-23');
 
     render(<TodayPage />);
 
     await waitFor(() => expect(screen.getByText('figure out')).toBeInTheDocument());
     expect(screen.getByText('오늘의 단어로')).toBeInTheDocument();
     expect(screen.queryByText('awesome')).not.toBeInTheDocument();
+  });
+
+  it('ignores a stale persisted word from a previous day and shows the new "today" word instead', async () => {
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue(todayEntry);
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-07-23', word: 'awesome', meaningKo: '정말 멋진' },
+      { date: '2026-07-20', word: 'figure out', meaningKo: '알아내다' },
+    ]);
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+
+    // Persisted yesterday (asOfToday '2026-07-22'), but today is now '2026-07-23' —
+    // a new day has started since this was recorded, so it must not be resumed.
+    setPersistedDisplayedWordDate('2026-07-20', '2026-07-22');
+
+    render(<TodayPage />);
+
+    await waitFor(() => expect(screen.getByText('awesome')).toBeInTheDocument());
+    expect(screen.queryByText('오늘의 단어로')).not.toBeInTheDocument();
   });
 });

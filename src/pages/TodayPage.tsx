@@ -39,7 +39,7 @@ export function TodayPage() {
         }
 
         let displayedEntry = entry;
-        const persistedDate = getPersistedDisplayedWordDate();
+        const persistedDate = getPersistedDisplayedWordDate(entry.date);
         if (persistedDate && persistedDate !== entry.date) {
           try {
             const persistedEntry = await fetchWordByDate(persistedDate);
@@ -93,7 +93,7 @@ export function TodayPage() {
       isNew,
       challengeVisible: false,
     });
-    setPersistedDisplayedWordDate(entry.date);
+    setPersistedDisplayedWordDate(entry.date, todayEntry.date);
     setCelebrating(true);
   }
 
@@ -106,7 +106,7 @@ export function TodayPage() {
       isNew,
       challengeVisible: false,
     });
-    setPersistedDisplayedWordDate(todayEntry.date);
+    setPersistedDisplayedWordDate(todayEntry.date, todayEntry.date);
   }
 
   return (
