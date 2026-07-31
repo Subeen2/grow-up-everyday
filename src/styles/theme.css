@@ -81,6 +81,12 @@ body {
   font-size: 0.75rem;
 }
 
+.archive-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 .archive-list-item {
   width: 100%;
   display: flex;

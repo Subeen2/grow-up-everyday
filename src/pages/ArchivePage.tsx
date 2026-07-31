@@ -38,7 +38,7 @@ export function ArchivePage() {
   if (state.status === 'error') return <p>오류: {state.message}</p>;
 
   return (
-    <ul>
+    <ul className="archive-list">
       {state.items.map((item) => (
         <ArchiveListItem key={item.date} item={item} onSelect={handleSelect} />
       ))}
