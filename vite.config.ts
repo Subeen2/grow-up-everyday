@@ -16,7 +16,7 @@ export default defineConfig({
       includeAssets: ['pwa-192x192.png', 'pwa-512x512.png'],
       manifest: {
         name: '명예 외국인',
-        short_name: '영단어',
+        short_name: '명예 외국인',
         description: '매일 일상 영단어를 픽셀아트로 만나보세요',
         theme_color: '#b8d8e8',
         background_color: '#b8d8e8',
