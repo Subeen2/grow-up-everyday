@@ -155,7 +155,7 @@ describe('TodayPage', () => {
     vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
     vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
 
-    setPersistedDisplayedWordDate('2026-07-20', '2026-07-23');
+    setPersistedDisplayedWordDate('2026-07-20', '2026-07-23', 'en');
 
     render(<TodayPage />);
 
@@ -175,7 +175,7 @@ describe('TodayPage', () => {
 
     // Persisted yesterday (asOfToday '2026-07-22'), but today is now '2026-07-23' —
     // a new day has started since this was recorded, so it must not be resumed.
-    setPersistedDisplayedWordDate('2026-07-20', '2026-07-22');
+    setPersistedDisplayedWordDate('2026-07-20', '2026-07-22', 'en');
 
     render(<TodayPage />);
 
