@@ -72,6 +72,14 @@ body {
   margin: 8px 0;
 }
 
+.word-card__speech-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
 .new-badge {
   display: inline-block;
   background: var(--color-accent-pink);
