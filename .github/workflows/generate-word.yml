@@ -18,6 +18,12 @@ jobs:
           node-version: '20'
       - run: npm ci
       - run: node scripts/generate-word.mjs
+        continue-on-error: true
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TZ: Asia/Seoul
+      - run: node scripts/generate-word-ja.mjs
+        continue-on-error: true
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TZ: Asia/Seoul

@@ -1,13 +1,13 @@
-import { fetchTodayWord, fetchArchiveIndex, fetchWordByDate } from '../lib/wordData';
+import { fetchTodayWord, fetchArchiveIndex, fetchWordByDate } from '../lib/jaWordData';
 import { useWordOfDayState } from '../lib/useWordOfDayState';
-import { WordCard } from '../components/WordCard';
+import { JaWordCard } from '../components/JaWordCard';
 import { PixelButton } from '../components/PixelButton';
-import { TypingChallenge } from '../components/TypingChallenge';
+import { VoiceChallenge } from '../components/VoiceChallenge';
 import { Celebration } from '../components/Celebration';
 
-export function TodayPage() {
+export function JaTodayPage() {
   const { state, celebrating, setCelebrating, showChallenge, handleChallengeSuccess, handleBackToToday } =
-    useWordOfDayState({ fetchTodayWord, fetchArchiveIndex, fetchWordByDate }, 'en');
+    useWordOfDayState({ fetchTodayWord, fetchArchiveIndex, fetchWordByDate }, 'ja');
 
   if (state.status === 'loading') return <p>불러오는 중...</p>;
   if (state.status === 'error') return <p>오류: {state.message}</p>;
@@ -19,7 +19,7 @@ export function TodayPage() {
   return (
     <div>
       {isNew && isShowingToday && <span className="new-badge">NEW</span>}
-      <WordCard entry={displayedEntry} hideExampleEn={challengeVisible} />
+      <JaWordCard entry={displayedEntry} hideExampleJa={challengeVisible} />
       {!isShowingToday && <PixelButton onClick={handleBackToToday}>오늘의 단어로</PixelButton>}
       {!challengeVisible && (
         <>
@@ -29,9 +29,7 @@ export function TodayPage() {
           {!hasOtherWord && <p className="typing-challenge__empty">아직 연습할 다른 단어가 없어요</p>}
         </>
       )}
-      {challengeVisible && (
-        <TypingChallenge targetSentence={displayedEntry.exampleEn} onSuccess={handleChallengeSuccess} />
-      )}
+      {challengeVisible && <VoiceChallenge targetEntry={displayedEntry} onSuccess={handleChallengeSuccess} />}
       {celebrating && <Celebration onDone={() => setCelebrating(false)} />}
     </div>
   );

@@ -1,4 +1,4 @@
-import { getLocalDateString, fetchWordByDate, fetchArchiveIndex, fetchTodayWord } from './wordData';
+import { getLocalDateString, fetchWordByDate, fetchArchiveIndex, fetchTodayWord, createWordApi } from './wordData';
 
 describe('getLocalDateString', () => {
   it('formats a date as YYYY-MM-DD', () => {
@@ -84,5 +84,29 @@ describe('fetchTodayWord', () => {
       .mockResolvedValueOnce({ ok: false, status: 404 })
       .mockResolvedValueOnce({ ok: true, json: async () => [] });
     await expect(fetchTodayWord()).rejects.toThrow('No word data available yet');
+  });
+});
+
+describe('createWordApi', () => {
+  beforeEach(() => {
+    vi.stubGlobal('fetch', vi.fn());
+  });
+
+  it('fetches a word from the given basePath', async () => {
+    const api = createWordApi<{ date: string }, { date: string }>('data/ja');
+    (fetch as any).mockResolvedValue({ ok: true, status: 200, json: async () => ({ date: '2026-08-04' }) });
+
+    await api.fetchWordByDate('2026-08-04');
+
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('data/ja/words/2026-08-04.json'));
+  });
+
+  it('fetches the archive index from the given basePath', async () => {
+    const api = createWordApi<{ date: string }, { date: string }>('data/ja');
+    (fetch as any).mockResolvedValue({ ok: true, json: async () => [] });
+
+    await api.fetchArchiveIndex();
+
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('data/ja/archive-index.json'));
   });
 });

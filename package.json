@@ -10,6 +10,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "generate:word": "node scripts/generate-word.mjs",
+    "generate:word:ja": "node scripts/generate-word-ja.mjs",
     "generate:icons": "node scripts/generate-placeholder-icons.mjs"
   },
   "dependencies": {

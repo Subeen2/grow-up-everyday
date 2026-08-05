@@ -176,3 +176,36 @@ body {
     opacity: 0;
   }
 }
+
+.voice-challenge {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voice-challenge__comparison {
+  background: #fff;
+  border: 2px solid var(--color-wood-dark);
+  padding: 8px;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.voice-challenge__submitted {
+  color: #b23b3b;
+}
+
+.voice-challenge__target {
+  color: var(--color-text);
+}
+
+.voice-challenge__unsupported {
+  font-size: 0.85rem;
+  color: var(--color-wood-dark);
+}
+
+.voice-challenge__error {
+  font-size: 0.85rem;
+  color: #b23b3b;
+}

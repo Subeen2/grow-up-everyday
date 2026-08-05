@@ -1,15 +1,15 @@
 const LAST_VIEWED_KEY = 'lastViewedDate';
 
-export function getLastViewedDate(): string | null {
-  return localStorage.getItem(LAST_VIEWED_KEY);
+export function getLastViewedDate(namespace: string): string | null {
+  return localStorage.getItem(`${LAST_VIEWED_KEY}:${namespace}`);
 }
 
-export function setLastViewedDate(date: string): void {
-  localStorage.setItem(LAST_VIEWED_KEY, date);
+export function setLastViewedDate(date: string, namespace: string): void {
+  localStorage.setItem(`${LAST_VIEWED_KEY}:${namespace}`, date);
 }
 
-export function isNewDaySinceLastView(today: string): boolean {
-  return getLastViewedDate() !== today;
+export function isNewDaySinceLastView(today: string, namespace: string): boolean {
+  return getLastViewedDate(namespace) !== today;
 }
 
 export async function requestNotificationPermissionAndSync(): Promise<void> {
