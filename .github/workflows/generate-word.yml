@@ -21,6 +21,10 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TZ: Asia/Seoul
+      - run: node scripts/generate-word-ja.mjs
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TZ: Asia/Seoul
       - name: Commit generated word
         run: |
           git config user.name "github-actions[bot]"

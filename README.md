@@ -33,6 +33,12 @@ npm test
    ```
    성공하면 `public/data/words/오늘날짜.json`이 생성되고 `public/data/archive-index.json`에 항목이 추가됩니다.
 
+일본어 단어를 로컬에서 생성해보려면 동일한 `.env` 설정 후:
+```bash
+npm run generate:word:ja
+```
+성공하면 `public/data/ja/words/오늘날짜.json`이 생성되고 `public/data/ja/archive-index.json`에 항목이 추가됩니다.
+
 ## GitHub 저장소 최초 설정 (수동, 1회)
 
 1. GitHub에 새 저장소를 만들고 이 프로젝트를 push합니다.
