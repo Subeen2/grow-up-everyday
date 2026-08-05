@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TodayPage } from './pages/TodayPage';
 import { ArchivePage } from './pages/ArchivePage';
 import { JaTodayPage } from './pages/JaTodayPage';
@@ -6,6 +6,8 @@ import { JaArchivePage } from './pages/JaArchivePage';
 import { PixelButton } from './components/PixelButton';
 import { PullToRefresh } from './components/PullToRefresh';
 import { requestNotificationPermissionAndSync } from './lib/reminder';
+import { fetchArchiveIndex as fetchArchiveIndexEn } from './lib/wordData';
+import { fetchArchiveIndex as fetchArchiveIndexJa } from './lib/jaWordData';
 
 type Tab = 'today' | 'archive';
 type Language = 'en' | 'ja';
@@ -13,6 +15,15 @@ type Language = 'en' | 'ja';
 export function App() {
   const [tab, setTab] = useState<Tab>('today');
   const [language, setLanguage] = useState<Language>('en');
+  const [archiveCount, setArchiveCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    setArchiveCount(null);
+    const fetchIndex = language === 'en' ? fetchArchiveIndexEn : fetchArchiveIndexJa;
+    fetchIndex()
+      .then((items) => setArchiveCount(items.length))
+      .catch(() => setArchiveCount(null));
+  }, [language]);
 
   return (
     <PullToRefresh>
@@ -31,7 +42,7 @@ export function App() {
             오늘의 단어
           </PixelButton>
           <PixelButton onClick={() => setTab('archive')} aria-pressed={tab === 'archive'}>
-            아카이브
+            아카이브{archiveCount !== null ? ` (${archiveCount})` : ''}
           </PixelButton>
           <PixelButton onClick={() => requestNotificationPermissionAndSync()}>
             🔔 알림 켜기

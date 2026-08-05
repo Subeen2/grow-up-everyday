@@ -82,4 +82,64 @@ describe('App', () => {
     await waitFor(() => expect(screen.getByText('大丈夫')).toBeInTheDocument());
     expect(screen.queryByText('awesome')).not.toBeInTheDocument();
   });
+
+  it('shows the archive count next to the 아카이브 label', async () => {
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue({
+      date: '2026-07-23',
+      word: 'awesome',
+      partOfSpeech: 'adjective',
+      pronunciationKo: '어썸',
+      meaningKo: '정말 멋진',
+      exampleEn: 'x',
+      exampleKo: 'y',
+    });
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-07-23', word: 'awesome', meaningKo: '정말 멋진' },
+      { date: '2026-07-20', word: 'chill', meaningKo: '느긋하게 쉬다' },
+      { date: '2026-07-18', word: 'figure out', meaningKo: '알아내다' },
+    ]);
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+
+    render(<App />);
+
+    await waitFor(() => expect(screen.getByText('아카이브 (3)')).toBeInTheDocument());
+  });
+
+  it('shows the Japanese archive count after switching language', async () => {
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue({
+      date: '2026-07-23',
+      word: 'awesome',
+      partOfSpeech: 'adjective',
+      pronunciationKo: '어썸',
+      meaningKo: '정말 멋진',
+      exampleEn: 'x',
+      exampleKo: 'y',
+    });
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-07-23', word: 'awesome', meaningKo: '정말 멋진' },
+    ]);
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+    vi.spyOn(jaWordData, 'fetchTodayWord').mockResolvedValue({
+      date: '2026-08-04',
+      word: '大丈夫',
+      reading: 'だいじょうぶ',
+      meaningKo: '괜찮아',
+      exampleJa: '今日は大丈夫です。',
+      exampleReading: 'きょうはだいじょうぶです',
+      exampleKo: '오늘은 괜찮아요.',
+    });
+    vi.spyOn(jaWordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-08-04', word: '大丈夫', meaningKo: '괜찮아' },
+      { date: '2026-08-01', word: '頑張って', meaningKo: '힘내' },
+    ]);
+
+    render(<App />);
+    await waitFor(() => expect(screen.getByText('아카이브 (1)')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByText('일본어'));
+
+    await waitFor(() => expect(screen.getByText('아카이브 (2)')).toBeInTheDocument());
+  });
 });
