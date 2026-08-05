@@ -2,9 +2,17 @@ export function isSpeechSynthesisSupported(): boolean {
   return typeof window !== 'undefined' && 'speechSynthesis' in window;
 }
 
-export function speakEnglish(text: string): void {
+function speak(text: string, lang: string): void {
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'en-US';
+  utterance.lang = lang;
   window.speechSynthesis.speak(utterance);
+}
+
+export function speakEnglish(text: string): void {
+  speak(text, 'en-US');
+}
+
+export function speakJapanese(text: string): void {
+  speak(text, 'ja-JP');
 }

@@ -1,4 +1,4 @@
-import { isSpeechSynthesisSupported, speakEnglish } from './speech';
+import { isSpeechSynthesisSupported, speakEnglish, speakJapanese } from './speech';
 
 describe('isSpeechSynthesisSupported', () => {
   it('returns true when window.speechSynthesis exists', () => {
@@ -34,5 +34,22 @@ describe('speakEnglish', () => {
     const utterance = speak.mock.calls[0][0];
     expect(utterance.text).toBe('awesome');
     expect(utterance.lang).toBe('en-US');
+  });
+});
+
+describe('speakJapanese', () => {
+  it('cancels any current utterance and speaks the given text in Japanese', () => {
+    const cancel = vi.fn();
+    const speak = vi.fn();
+    vi.stubGlobal('speechSynthesis', { cancel, speak });
+    vi.stubGlobal('SpeechSynthesisUtterance', FakeUtterance);
+
+    speakJapanese('大丈夫');
+
+    expect(cancel).toHaveBeenCalledOnce();
+    expect(speak).toHaveBeenCalledOnce();
+    const utterance = speak.mock.calls[0][0];
+    expect(utterance.text).toBe('大丈夫');
+    expect(utterance.lang).toBe('ja-JP');
   });
 });

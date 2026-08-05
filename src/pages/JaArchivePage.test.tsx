@@ -12,9 +12,11 @@ describe('JaArchivePage', () => {
       date: '2026-08-04',
       word: '大丈夫',
       reading: 'だいじょうぶ',
+      readingKo: '다이죠부',
       meaningKo: '괜찮아',
       exampleJa: '今日は大丈夫です。',
       exampleReading: 'きょうはだいじょうぶです',
+      exampleReadingKo: '쿄와 다이죠부데스',
       exampleKo: '오늘은 괜찮아요.',
     });
 

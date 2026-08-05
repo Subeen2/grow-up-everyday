@@ -8,9 +8,11 @@ const todayEntry = {
   date: '2026-08-04',
   word: '大丈夫',
   reading: 'だいじょうぶ',
+  readingKo: '다이죠부',
   meaningKo: '괜찮아',
   exampleJa: '今日は大丈夫です。',
   exampleReading: 'きょうはだいじょうぶです',
+  exampleReadingKo: '쿄와 다이죠부데스',
   exampleKo: '오늘은 괜찮아요.',
 };
 
@@ -100,9 +102,11 @@ describe('JaTodayPage', () => {
       date: '2026-08-01',
       word: '頑張って',
       reading: 'がんばって',
+      readingKo: '간밧테',
       meaningKo: '힘내',
       exampleJa: '頑張ってください。',
       exampleReading: 'がんばってください',
+      exampleReadingKo: '간밧테 쿠다사이',
       exampleKo: '힘내주세요.',
     };
 

@@ -16,9 +16,11 @@ describe('parseWordResponse', () => {
   const validJson = JSON.stringify({
     word: ' 大丈夫 ',
     reading: 'だいじょうぶ',
+    readingKo: ' 다이죠부 ',
     meaningKo: '괜찮아',
     exampleJa: '今日は大丈夫です。',
     exampleReading: 'きょうはだいじょうぶです',
+    exampleReadingKo: ' 쿄와 다이죠부데스 ',
     exampleKo: '오늘은 괜찮아요.',
   });
 
@@ -26,9 +28,11 @@ describe('parseWordResponse', () => {
     expect(parseWordResponse(validJson)).toEqual({
       word: '大丈夫',
       reading: 'だいじょうぶ',
+      readingKo: '다이죠부',
       meaningKo: '괜찮아',
       exampleJa: '今日は大丈夫です。',
       exampleReading: 'きょうはだいじょうぶです',
+      exampleReadingKo: '쿄와 다이죠부데스',
       exampleKo: '오늘은 괜찮아요.',
     });
   });
@@ -66,9 +70,11 @@ describe('generateWordEntry', () => {
                   content: JSON.stringify({
                     word: '大丈夫',
                     reading: 'だいじょうぶ',
+                    readingKo: '다이죠부',
                     meaningKo: '괜찮아',
                     exampleJa: '今日は大丈夫です。',
                     exampleReading: 'きょうはだいじょうぶです',
+                    exampleReadingKo: '쿄와 다이죠부데스',
                     exampleKo: '오늘은 괜찮아요.',
                   }),
                 },

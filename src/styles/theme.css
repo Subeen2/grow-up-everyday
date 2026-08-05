@@ -72,6 +72,12 @@ body {
   margin: 8px 0;
 }
 
+.word-card__example-reading {
+  color: var(--color-wood-dark);
+  font-size: 0.9rem;
+  margin-top: -4px;
+}
+
 .word-card__speech-buttons {
   display: flex;
   justify-content: center;
