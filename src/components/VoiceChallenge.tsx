@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { isCorrectJaAnswer } from '../lib/voiceChallenge';
 import { PixelButton } from './PixelButton';
 
@@ -25,11 +25,16 @@ function getSpeechRecognitionCtor(): (new () => any) | undefined {
 
 export function VoiceChallenge({ targetEntry, onSuccess }: VoiceChallengeProps) {
   const [status, setStatus] = useState<ChallengeStatus>({ kind: 'idle' });
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
     if (!getSpeechRecognitionCtor()) {
       setStatus({ kind: 'unsupported' });
     }
+  }, []);
+
+  useEffect(() => {
+    return () => recognitionRef.current?.abort?.();
   }, []);
 
   function handleStart() {
@@ -39,6 +44,7 @@ export function VoiceChallenge({ targetEntry, onSuccess }: VoiceChallengeProps) 
       return;
     }
     const recognition = new Ctor();
+    recognitionRef.current = recognition;
     recognition.lang = 'ja-JP';
     recognition.continuous = false;
     recognition.interimResults = false;
@@ -46,6 +52,7 @@ export function VoiceChallenge({ targetEntry, onSuccess }: VoiceChallengeProps) 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript as string;
       if (isCorrectJaAnswer(transcript, targetEntry)) {
+        setStatus({ kind: 'idle' });
         onSuccess();
       } else {
         setStatus({ kind: 'incorrect', submitted: transcript });

@@ -15,6 +15,7 @@ class FakeRecognition {
   interimResults = false;
   onresult: ((event: { results: { 0: { transcript: string } }[][] }) => void) | null = null;
   onerror: (() => void) | null = null;
+  abort = vi.fn();
   start() {
     FakeRecognition.instances.push(this);
   }
@@ -85,5 +86,19 @@ describe('VoiceChallenge', () => {
     await userEvent.click(screen.getByText('🎤 말하기'));
 
     expect(screen.getByText('다시 시도해주세요')).toBeInTheDocument();
+  });
+
+  it('aborts an in-flight recognition when unmounted', async () => {
+    (window as any).SpeechRecognition = FakeRecognition;
+    const { unmount } = render(
+      <VoiceChallenge targetEntry={targetEntry} onSuccess={vi.fn()} />
+    );
+
+    await userEvent.click(screen.getByText('🎤 말하기'));
+    const instance = FakeRecognition.instances[FakeRecognition.instances.length - 1];
+
+    unmount();
+
+    expect(instance.abort).toHaveBeenCalledOnce();
   });
 });
