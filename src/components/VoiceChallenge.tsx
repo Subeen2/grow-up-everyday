@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { flushSync } from 'react-dom';
 import { isCorrectJaAnswer } from '../lib/voiceChallenge';
 import { PixelButton } from './PixelButton';
 
@@ -44,19 +43,15 @@ export function VoiceChallenge({ targetEntry, onSuccess }: VoiceChallengeProps) 
     recognition.continuous = false;
     recognition.interimResults = false;
 
-    // ponytail: SpeechRecognition callbacks fire outside React's event system,
-    // so React 18 defers the setState to a microtask instead of committing it
-    // synchronously. flushSync forces an immediate commit so the DOM reflects
-    // the result right after the callback runs.
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript as string;
       if (isCorrectJaAnswer(transcript, targetEntry)) {
         onSuccess();
       } else {
-        flushSync(() => setStatus({ kind: 'incorrect', submitted: transcript }));
+        setStatus({ kind: 'incorrect', submitted: transcript });
       }
     };
-    recognition.onerror = () => flushSync(() => setStatus({ kind: 'error' }));
+    recognition.onerror = () => setStatus({ kind: 'error' });
 
     setStatus({ kind: 'listening' });
     recognition.start();

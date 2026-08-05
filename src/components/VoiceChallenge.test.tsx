@@ -1,3 +1,4 @@
+import { act } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { VoiceChallenge } from './VoiceChallenge';
@@ -21,7 +22,9 @@ class FakeRecognition {
 
 function resolveWithTranscript(text: string) {
   const instance = FakeRecognition.instances[FakeRecognition.instances.length - 1];
-  instance.onresult?.({ results: [[{ transcript: text }]] } as any);
+  act(() => {
+    instance.onresult?.({ results: [[{ transcript: text }]] } as any);
+  });
 }
 
 describe('VoiceChallenge', () => {
