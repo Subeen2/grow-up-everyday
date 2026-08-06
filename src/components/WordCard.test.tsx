@@ -17,7 +17,7 @@ describe('WordCard', () => {
   it('renders all fields of the entry', () => {
     render(<WordCard entry={sampleEntry} />);
     expect(screen.getByText('awesome')).toBeInTheDocument();
-    expect(screen.getByText('adjective')).toBeInTheDocument();
+    expect(screen.queryByText('adjective')).not.toBeInTheDocument();
     expect(screen.getByText('[어썸]')).toBeInTheDocument();
     expect(screen.getByText('정말 멋진, 굉장한')).toBeInTheDocument();
     expect(screen.getByText('This place is awesome!')).toBeInTheDocument();
