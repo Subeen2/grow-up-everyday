@@ -10,6 +10,11 @@ describe('buildPrompt', () => {
     const prompt = buildPrompt([]);
     expect(prompt).not.toContain('최근에 이미 다뤘으니');
   });
+
+  it('explicitly warns that the Korean readings must not be translations', () => {
+    const prompt = buildPrompt([]);
+    expect(prompt).toContain('번역이 아니라 발음');
+  });
 });
 
 describe('parseWordResponse', () => {
@@ -44,6 +49,36 @@ describe('parseWordResponse', () => {
 
   it('throws when the response is not valid JSON', () => {
     expect(() => parseWordResponse('not json')).toThrow('not valid JSON');
+  });
+
+  it('throws when exampleReadingKo is actually a translation of the sentence instead of a phonetic reading', () => {
+    const badJson = JSON.stringify({
+      word: '頑張る',
+      reading: 'がんばる',
+      readingKo: '간바루',
+      meaningKo: '열심히 하다',
+      exampleJa: '試験に向けて頑張ります。',
+      exampleReading: 'しけんにむけてがんばります。',
+      exampleReadingKo: '시험을 위해 열심히 할 거예요.',
+      exampleKo: '시험을 위해 열심히 하겠습니다.',
+    });
+
+    expect(() => parseWordResponse(badJson)).toThrow('looks like a translation');
+  });
+
+  it('throws when readingKo is actually a translation of the word instead of a phonetic reading', () => {
+    const badJson = JSON.stringify({
+      word: '頑張る',
+      reading: 'がんばる',
+      readingKo: '열심히 하다',
+      meaningKo: '열심히 하다',
+      exampleJa: '試験に向けて頑張ります。',
+      exampleReading: 'しけんにむけてがんばります。',
+      exampleReadingKo: '시켄니 무케테 간바리마스',
+      exampleKo: '시험을 위해 열심히 하겠습니다.',
+    });
+
+    expect(() => parseWordResponse(badJson)).toThrow('looks like a translation');
   });
 });
 
