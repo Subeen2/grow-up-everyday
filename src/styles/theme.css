@@ -99,6 +99,8 @@ body {
   list-style: none;
   margin: 0;
   padding: 0;
+  max-height: calc(100dvh - 160px);
+  overflow-y: auto;
 }
 
 .archive-list-item {

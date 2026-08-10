@@ -58,7 +58,10 @@ export function VoiceChallenge({ targetEntry, onSuccess }: VoiceChallengeProps) 
         setStatus({ kind: 'incorrect', submitted: transcript });
       }
     };
-    recognition.onerror = () => setStatus({ kind: 'error' });
+    recognition.onerror = (event: any) => {
+      console.error('SpeechRecognition error:', event?.error);
+      setStatus({ kind: 'error' });
+    };
 
     setStatus({ kind: 'listening' });
     recognition.start();
