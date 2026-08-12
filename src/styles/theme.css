@@ -99,8 +99,20 @@ body {
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: calc(100dvh - 160px);
   overflow-y: auto;
+}
+
+.app:has(> .archive-list) {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.app:has(> .archive-list) .archive-list {
+  flex: 1;
+  min-height: 0;
 }
 
 .archive-list-item {
