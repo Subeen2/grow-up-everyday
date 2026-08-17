@@ -5,5 +5,10 @@
   "meaningKo": "체크인하다, 등록하다; 누군가의 안부를 묻다",
   "exampleEn": "I need to check in at the hotel before noon.",
   "exampleKo": "나는 정오 전에 호텔에 체크인해야 해.",
-  "date": "2026-08-16"
+  "date": "2026-08-16",
+  "gameExamples": [
+    "Please remember to check in with your teacher before the trip starts.",
+    "I always check in with my family when I travel to let them know I'm safe.",
+    "Make sure to check in at the airport at least two hours before your flight."
+  ]
 }

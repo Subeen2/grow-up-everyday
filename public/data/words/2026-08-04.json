@@ -5,5 +5,10 @@
   "meaningKo": "생각해내다, 제안하다",
   "exampleEn": "I need to come up with a solution for this problem.",
   "exampleKo": "이 문제에 대한 해결책을 생각해내야 해.",
-  "date": "2026-08-04"
+  "date": "2026-08-04",
+  "gameExamples": [
+    "It's important to come up with new ideas during brainstorming sessions.",
+    "Can you help me come up with a plan for the weekend?",
+    "She was able to come up with an interesting proposal for the project."
+  ]
 }

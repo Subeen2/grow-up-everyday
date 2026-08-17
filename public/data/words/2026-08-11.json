@@ -5,5 +5,10 @@
   "meaningKo": "미루다, 연기하다",
   "exampleEn": "I can't put off my homework any longer.",
   "exampleKo": "더 이상 숙제를 미룰 수 없어.",
-  "date": "2026-08-11"
+  "date": "2026-08-11",
+  "gameExamples": [
+    "Don't put off your dentist appointment; it's important for your health.",
+    "She decided to put off the meeting until next week to prepare more.",
+    "We can't put off our plans for the trip if we want to go this summer."
+  ]
 }

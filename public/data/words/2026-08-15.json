@@ -5,5 +5,10 @@
   "meaningKo": "하루의 일을 마치다, 일을 끝내다",
   "exampleEn": "I think we should call it a day and continue tomorrow.",
   "exampleKo": "우리는 오늘은 여기까지 하고 내일 계속하는 게 좋을 것 같아.",
-  "date": "2026-08-15"
+  "date": "2026-08-15",
+  "gameExamples": [
+    "After working for hours, we decided to call it a day.",
+    "It's getting late, so let's call it a day and head home.",
+    "We accomplished a lot today, so I think it's time to call it a day."
+  ]
 }

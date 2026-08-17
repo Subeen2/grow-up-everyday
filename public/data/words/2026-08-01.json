@@ -5,5 +5,10 @@
   "meaningKo": "약속이나 계획에서 빠지다, 철회하다",
   "exampleEn": "I can't believe he decided to back out at the last minute.",
   "exampleKo": "그가 막판에 빠지기로 결정했다니 믿을 수 없다.",
-  "date": "2026-08-01"
+  "date": "2026-08-01",
+  "gameExamples": [
+    "She promised to join us for the trip, but she chose to back out when she heard the weather forecast.",
+    "It's really disappointing that I had to back out of the meeting because of a family emergency.",
+    "He wanted to participate in the event, but he had to back out due to a scheduling conflict."
+  ]
 }

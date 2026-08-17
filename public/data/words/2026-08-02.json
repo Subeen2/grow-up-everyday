@@ -5,5 +5,10 @@
   "meaningKo": "극복하다, 잊다",
   "exampleEn": "It took her a while to get over the breakup.",
   "exampleKo": "그 이별을 극복하는 데 좀 시간이 걸렸다.",
-  "date": "2026-08-02"
+  "date": "2026-08-02",
+  "gameExamples": [
+    "He struggled to get over his fear of public speaking.",
+    "It can be hard to get over a loss, but time helps.",
+    "She found it difficult to get over the challenges of moving to a new city."
+  ]
 }

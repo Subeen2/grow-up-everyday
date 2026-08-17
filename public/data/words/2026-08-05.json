@@ -5,5 +5,10 @@
   "meaningKo": "양보하다, 굴복하다",
   "exampleEn": "I didn't want to give in, but I had no choice.",
   "exampleKo": "나는 양보하고 싶지 않았지만, 선택의 여지가 없었다.",
-  "date": "2026-08-05"
+  "date": "2026-08-05",
+  "gameExamples": [
+    "She refused to give in, even when the pressure became overwhelming.",
+    "After hours of negotiation, they decided to give in to the demands of the other party.",
+    "He was determined not to give in to fear during the difficult times."
+  ]
 }

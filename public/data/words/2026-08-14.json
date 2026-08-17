@@ -5,5 +5,10 @@
   "meaningKo": "어디에서 시간을 보내다, 함께 놀다",
   "exampleEn": "Do you want to hang out this weekend?",
   "exampleKo": "이번 주말에 같이 놀래?",
-  "date": "2026-08-14"
+  "date": "2026-08-14",
+  "gameExamples": [
+    "Let's hang out at the park after school.",
+    "I usually hang out with my friends at the mall.",
+    "On Fridays, we like to hang out at my house and watch movies."
+  ]
 }
