@@ -2,7 +2,7 @@ import 'dotenv/config';
 import OpenAI from 'openai';
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import { generateWordEntry, getRecentWords } from './wordGeneratorJa.mjs';
+import { generateWordEntry, generateGameExamples, getRecentWords } from './wordGeneratorJa.mjs';
 
 const DATA_DIR = path.join(process.cwd(), 'public', 'data', 'ja');
 const WORDS_DIR = path.join(DATA_DIR, 'words');
@@ -44,6 +44,17 @@ async function main() {
   const client = new OpenAI({ apiKey });
   const entry = await generateWordEntry(client, recentWords);
   entry.date = today;
+
+  try {
+    entry.gameExamples = await generateGameExamples(client, {
+      word: entry.word,
+      reading: entry.reading,
+      meaningKo: entry.meaningKo,
+      existingExample: entry.exampleJa,
+    });
+  } catch (err) {
+    console.warn('Failed to generate game examples, continuing without them:', err);
+  }
 
   await fs.writeFile(path.join(WORDS_DIR, `${today}.json`), JSON.stringify(entry, null, 2) + '\n');
 

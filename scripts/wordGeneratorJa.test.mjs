@@ -1,4 +1,12 @@
-import { buildPrompt, parseWordResponse, getRecentWords, generateWordEntry } from './wordGeneratorJa.mjs';
+import {
+  buildPrompt,
+  parseWordResponse,
+  getRecentWords,
+  generateWordEntry,
+  buildGameExamplesPrompt,
+  parseGameExamplesResponse,
+  generateGameExamples,
+} from './wordGeneratorJa.mjs';
 
 describe('buildPrompt', () => {
   it('includes an avoid-list when recentWords is non-empty', () => {
@@ -122,6 +130,62 @@ describe('generateWordEntry', () => {
 
     const result = await generateWordEntry(fakeClient, ['頑張って']);
     expect(result.word).toBe('大丈夫');
+    expect(fakeClient.chat.completions.create).toHaveBeenCalledOnce();
+  });
+});
+
+describe('buildGameExamplesPrompt', () => {
+  it('includes the word, reading, meaning, and existing example', () => {
+    const prompt = buildGameExamplesPrompt('大丈夫', 'だいじょうぶ', '괜찮아', '今日は大丈夫です。');
+    expect(prompt).toContain('大丈夫');
+    expect(prompt).toContain('だいじょうぶ');
+    expect(prompt).toContain('괜찮아');
+    expect(prompt).toContain('今日は大丈夫です。');
+  });
+});
+
+describe('parseGameExamplesResponse', () => {
+  it('keeps sentences that contain the kanji word and are not the existing example', () => {
+    const raw = JSON.stringify({
+      examples: ['彼は大丈夫だと言った。', '今日は大丈夫です。', '関係ない文章。', '  '],
+    });
+
+    expect(parseGameExamplesResponse(raw, '大丈夫', '今日は大丈夫です。')).toEqual([
+      '彼は大丈夫だと言った。',
+    ]);
+  });
+
+  it('throws when examples is missing or not an array', () => {
+    expect(() => parseGameExamplesResponse(JSON.stringify({}), '大丈夫', 'x')).toThrow(
+      'Missing or invalid field'
+    );
+  });
+
+  it('throws when the response is not valid JSON', () => {
+    expect(() => parseGameExamplesResponse('not json', '大丈夫', 'x')).toThrow('not valid JSON');
+  });
+});
+
+describe('generateGameExamples', () => {
+  it('calls the OpenAI client and parses its response', async () => {
+    const fakeClient = {
+      chat: {
+        completions: {
+          create: vi.fn().mockResolvedValue({
+            choices: [{ message: { content: JSON.stringify({ examples: ['彼は大丈夫だと言った。'] }) } }],
+          }),
+        },
+      },
+    };
+
+    const result = await generateGameExamples(fakeClient, {
+      word: '大丈夫',
+      reading: 'だいじょうぶ',
+      meaningKo: '괜찮아',
+      existingExample: '今日は大丈夫です。',
+    });
+
+    expect(result).toEqual(['彼は大丈夫だと言った。']);
     expect(fakeClient.chat.completions.create).toHaveBeenCalledOnce();
   });
 });

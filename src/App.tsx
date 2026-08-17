@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { TodayPage } from './pages/TodayPage';
 import { ArchivePage } from './pages/ArchivePage';
+import { GamePage } from './pages/GamePage';
 import { JaTodayPage } from './pages/JaTodayPage';
 import { JaArchivePage } from './pages/JaArchivePage';
+import { JaGamePage } from './pages/JaGamePage';
 import { PixelButton } from './components/PixelButton';
 import { PullToRefresh } from './components/PullToRefresh';
 import { requestNotificationPermissionAndSync } from './lib/reminder';
 import { fetchArchiveIndex as fetchArchiveIndexEn } from './lib/wordData';
 import { fetchArchiveIndex as fetchArchiveIndexJa } from './lib/jaWordData';
 
-type Tab = 'today' | 'archive';
+type Tab = 'today' | 'archive' | 'game';
 type Language = 'en' | 'ja';
 
 export function App() {
@@ -44,6 +46,9 @@ export function App() {
           <PixelButton onClick={() => setTab('archive')} aria-pressed={tab === 'archive'}>
             아카이브{archiveCount !== null ? ` (${archiveCount})` : ''}
           </PixelButton>
+          <PixelButton onClick={() => setTab('game')} aria-pressed={tab === 'game'}>
+            🎮 빈칸 게임
+          </PixelButton>
           <PixelButton onClick={() => requestNotificationPermissionAndSync()}>
             🔔 알림 켜기
           </PixelButton>
@@ -51,13 +56,17 @@ export function App() {
         {language === 'en' ? (
           tab === 'today' ? (
             <TodayPage />
-          ) : (
+          ) : tab === 'archive' ? (
             <ArchivePage />
+          ) : (
+            <GamePage />
           )
         ) : tab === 'today' ? (
           <JaTodayPage />
-        ) : (
+        ) : tab === 'archive' ? (
           <JaArchivePage />
+        ) : (
+          <JaGamePage />
         )}
       </div>
     </PullToRefresh>

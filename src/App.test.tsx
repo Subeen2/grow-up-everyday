@@ -33,6 +33,41 @@ describe('App', () => {
     await waitFor(() => expect(screen.queryByText('불러오는 중...')).not.toBeInTheDocument());
   });
 
+  it('switches to the game tab', async () => {
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue({
+      date: '2026-07-23',
+      word: 'awesome',
+      partOfSpeech: 'adjective',
+      pronunciationKo: '어썸',
+      meaningKo: '정말 멋진',
+      exampleEn: 'This place is awesome!',
+      exampleKo: 'y',
+    });
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-07-23', word: 'awesome', meaningKo: '정말 멋진' },
+    ]);
+    vi.spyOn(wordData, 'fetchWordByDate').mockResolvedValue({
+      date: '2026-07-23',
+      word: 'awesome',
+      partOfSpeech: 'adjective',
+      pronunciationKo: '어썸',
+      meaningKo: '정말 멋진',
+      exampleEn: 'This place is awesome!',
+      exampleKo: 'y',
+    });
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+
+    render(<App />);
+    await waitFor(() => expect(screen.getByText('awesome')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByText('🎮 빈칸 게임'));
+
+    await waitFor(() => expect(screen.getByText(/This place is/)).toBeInTheDocument());
+    expect(screen.getByText('힌트: 정말 멋진')).toBeInTheDocument();
+  });
+
   it('requests notification permission when the bell button is clicked', async () => {
     vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue({
       date: '2026-07-23',

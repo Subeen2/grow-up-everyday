@@ -237,3 +237,89 @@ body {
   font-size: 0.85rem;
   color: #b23b3b;
 }
+
+.word-blank-game {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.word-blank-game__scoreboard {
+  display: flex;
+  justify-content: space-between;
+  background: #fff;
+  border: 3px solid var(--color-wood-dark);
+  box-shadow: var(--shadow-pixel);
+  padding: 8px 12px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+.word-blank-game__meaning {
+  color: var(--color-wood-dark);
+  font-size: 0.9rem;
+}
+
+.word-blank-game__sentence {
+  background: #fff;
+  border: 6px solid var(--color-wood-dark);
+  box-shadow: var(--shadow-pixel);
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.word-blank-game__blank {
+  display: inline-block;
+  min-width: 3em;
+  border-bottom: 3px solid var(--color-wood-dark);
+  color: var(--color-accent-lavender);
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.word-blank-game__input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.word-blank-game__input {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  font-family: 'Galmuri11', sans-serif;
+  border: 3px solid var(--color-wood-dark);
+  padding: 8px;
+  font-size: 1rem;
+}
+
+.word-blank-game__feedback--correct {
+  color: #2f7a3d;
+  font-weight: bold;
+}
+
+.word-blank-game__feedback--incorrect {
+  color: #b23b3b;
+}
+
+.word-blank-game__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.word-blank-game__end {
+  background: #fff;
+  border: 6px solid var(--color-wood-dark);
+  box-shadow: var(--shadow-pixel);
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.word-blank-game__final-score {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 8px;
+}

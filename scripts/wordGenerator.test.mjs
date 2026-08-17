@@ -1,4 +1,12 @@
-import { buildPrompt, parseWordResponse, getRecentWords, generateWordEntry } from './wordGenerator.mjs';
+import {
+  buildPrompt,
+  parseWordResponse,
+  getRecentWords,
+  generateWordEntry,
+  buildGameExamplesPrompt,
+  parseGameExamplesResponse,
+  generateGameExamples,
+} from './wordGenerator.mjs';
 
 describe('buildPrompt', () => {
   it('includes an avoid-list when recentWords is non-empty', () => {
@@ -81,6 +89,68 @@ describe('generateWordEntry', () => {
 
     const result = await generateWordEntry(fakeClient, ['chill']);
     expect(result.word).toBe('awesome');
+    expect(fakeClient.chat.completions.create).toHaveBeenCalledOnce();
+  });
+});
+
+describe('buildGameExamplesPrompt', () => {
+  it('includes the word, meaning, and existing example', () => {
+    const prompt = buildGameExamplesPrompt('awesome', '정말 멋진', 'This place is awesome!');
+    expect(prompt).toContain('awesome');
+    expect(prompt).toContain('정말 멋진');
+    expect(prompt).toContain('This place is awesome!');
+  });
+});
+
+describe('parseGameExamplesResponse', () => {
+  it('keeps sentences that contain the word and are not the existing example', () => {
+    const raw = JSON.stringify({
+      examples: ['Awesome work today.', 'This place is awesome!', 'Not related.', '  '],
+    });
+
+    expect(parseGameExamplesResponse(raw, 'awesome', 'This place is awesome!')).toEqual([
+      'Awesome work today.',
+    ]);
+  });
+
+  it('deduplicates repeated sentences', () => {
+    const raw = JSON.stringify({
+      examples: ['Awesome work today.', 'awesome work today.'],
+    });
+
+    expect(parseGameExamplesResponse(raw, 'awesome', 'x')).toEqual(['Awesome work today.']);
+  });
+
+  it('throws when examples is missing or not an array', () => {
+    expect(() => parseGameExamplesResponse(JSON.stringify({}), 'awesome', 'x')).toThrow(
+      'Missing or invalid field'
+    );
+  });
+
+  it('throws when the response is not valid JSON', () => {
+    expect(() => parseGameExamplesResponse('not json', 'awesome', 'x')).toThrow('not valid JSON');
+  });
+});
+
+describe('generateGameExamples', () => {
+  it('calls the OpenAI client and parses its response', async () => {
+    const fakeClient = {
+      chat: {
+        completions: {
+          create: vi.fn().mockResolvedValue({
+            choices: [{ message: { content: JSON.stringify({ examples: ['Awesome work today.'] }) } }],
+          }),
+        },
+      },
+    };
+
+    const result = await generateGameExamples(fakeClient, {
+      word: 'awesome',
+      meaningKo: '정말 멋진',
+      existingExample: 'This place is awesome!',
+    });
+
+    expect(result).toEqual(['Awesome work today.']);
     expect(fakeClient.chat.completions.create).toHaveBeenCalledOnce();
   });
 });

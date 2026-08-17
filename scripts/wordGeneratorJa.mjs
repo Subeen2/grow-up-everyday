@@ -94,3 +94,54 @@ export async function generateWordEntry(client, recentWords) {
   const raw = completion.choices[0].message.content;
   return parseWordResponse(raw);
 }
+
+const GAME_EXAMPLES_COUNT = 3;
+
+export function buildGameExamplesPrompt(word, reading, meaningKo, existingExample) {
+  return [
+    '너는 한국인 일본어 학습자를 위한 "빈칸 채우기 연습" 예문을 만드는 도우미야.',
+    `아래 단어를 사용한 자연스러운 짧은 일본어 문장(한자+가나 혼용)을 정확히 ${GAME_EXAMPLES_COUNT}개 만들어줘.`,
+    `단어: "${word}" (읽기: ${reading}, 뜻: ${meaningKo})`,
+    `이미 사용 중인 예문과는 다르고, 서로도 다른 새로운 문장이어야 해: "${existingExample}"`,
+    `각 문장은 반드시 "${word}"라는 한자 표기를 정확히 그대로 포함해야 해.`,
+    '반드시 아래 JSON 형식으로만 응답해: {"examples": string[]}',
+  ].join('\n');
+}
+
+export function parseGameExamplesResponse(raw, word, existingExample) {
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    throw new Error('OpenAI response is not valid JSON');
+  }
+  if (!Array.isArray(data.examples)) {
+    throw new Error('Missing or invalid field: examples');
+  }
+
+  const seen = new Set([existingExample.trim()]);
+  const examples = [];
+  for (const item of data.examples) {
+    if (typeof item !== 'string') continue;
+    const sentence = item.trim();
+    if (!sentence) continue;
+    if (seen.has(sentence) || !sentence.includes(word)) continue;
+    seen.add(sentence);
+    examples.push(sentence);
+  }
+  return examples;
+}
+
+export async function generateGameExamples(client, { word, reading, meaningKo, existingExample }) {
+  const prompt = buildGameExamplesPrompt(word, reading, meaningKo, existingExample);
+  const completion = await client.chat.completions.create({
+    model: 'gpt-4o-mini',
+    response_format: { type: 'json_object' },
+    messages: [
+      { role: 'system', content: 'You output strict JSON and nothing else.' },
+      { role: 'user', content: prompt },
+    ],
+  });
+  const raw = completion.choices[0].message.content;
+  return parseGameExamplesResponse(raw, word, existingExample);
+}

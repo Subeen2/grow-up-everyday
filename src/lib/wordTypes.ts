@@ -6,6 +6,7 @@ export interface WordEntry {
   meaningKo: string;
   exampleEn: string;
   exampleKo: string;
+  gameExamples?: string[]; // extra sentences containing `word`, for blank-fill game variety
 }
 
 export interface ArchiveIndexItem {
@@ -24,6 +25,7 @@ export interface JaWordEntry {
   exampleReading: string; // exampleJa 전체를 히라가나로 읽은 것 (음성 매칭용)
   exampleReadingKo: string; // exampleJa 전체의 한글 발음표기
   exampleKo: string;
+  gameExamples?: string[]; // extra sentences containing `word`, for blank-fill game variety
 }
 
 export interface JaArchiveIndexItem {
