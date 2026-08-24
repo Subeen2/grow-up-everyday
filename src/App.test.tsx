@@ -120,6 +120,56 @@ describe('App', () => {
     expect(screen.queryByText('awesome')).not.toBeInTheDocument();
   });
 
+  it('hides the game tab in Japanese mode and falls back to today if it was open', async () => {
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue({
+      date: '2026-07-23',
+      word: 'awesome',
+      partOfSpeech: 'adjective',
+      pronunciationKo: '어썸',
+      meaningKo: '정말 멋진',
+      exampleEn: 'This place is awesome!',
+      exampleKo: 'y',
+    });
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-07-23', word: 'awesome', meaningKo: '정말 멋진' },
+    ]);
+    vi.spyOn(wordData, 'fetchWordByDate').mockResolvedValue({
+      date: '2026-07-23',
+      word: 'awesome',
+      partOfSpeech: 'adjective',
+      pronunciationKo: '어썸',
+      meaningKo: '정말 멋진',
+      exampleEn: 'This place is awesome!',
+      exampleKo: 'y',
+    });
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+    vi.spyOn(Math, 'random').mockReturnValue(0);
+    vi.spyOn(jaWordData, 'fetchTodayWord').mockResolvedValue({
+      date: '2026-08-04',
+      word: '大丈夫',
+      reading: 'だいじょうぶ',
+      readingKo: '다이죠부',
+      meaningKo: '괜찮아',
+      exampleJa: '今日は大丈夫です。',
+      exampleReading: 'きょうはだいじょうぶです',
+      exampleReadingKo: '쿄와 다이죠부데스',
+      exampleKo: '오늘은 괜찮아요.',
+    });
+    vi.spyOn(jaWordData, 'fetchArchiveIndex').mockResolvedValue([]);
+
+    render(<App />);
+    await waitFor(() => expect(screen.getByText('awesome')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByText('🎮 빈칸 게임'));
+    await waitFor(() => expect(screen.getByText(/This place is/)).toBeInTheDocument());
+
+    await userEvent.click(screen.getByText('일본어'));
+
+    expect(screen.queryByText('🎮 빈칸 게임')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('大丈夫')).toBeInTheDocument());
+  });
+
   it('shows the archive count next to the 아카이브 label', async () => {
     vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue({
       date: '2026-07-23',
