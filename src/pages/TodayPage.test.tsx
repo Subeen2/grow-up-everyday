@@ -215,6 +215,7 @@ describe('TodayPage', () => {
 
     await userEvent.click(screen.getByText('다른 단어 보기'));
     expect(screen.getByRole('button', { name: 'O' })).toBeInTheDocument();
+    expect(screen.queryByText('정말 멋진')).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('button', { name: 'O' }));
 

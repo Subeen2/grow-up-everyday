@@ -1,4 +1,4 @@
-﻿export type ChallengeType = 'typing' | 'ox' | 'order';
+export type ChallengeType = 'typing' | 'ox' | 'order';
 
 const CHALLENGE_TYPES: ChallengeType[] = ['typing', 'ox', 'order'];
 

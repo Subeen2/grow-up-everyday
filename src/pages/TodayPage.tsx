@@ -29,7 +29,11 @@ export function TodayPage() {
   return (
     <div>
       {isNew && isShowingToday && <span className="new-badge">NEW</span>}
-      <WordCard entry={displayedEntry} hideExampleEn={challengeVisible} />
+      <WordCard
+        entry={displayedEntry}
+        hideExampleEn={challengeVisible && challengeType !== 'ox'}
+        hideMeaningKo={challengeVisible && challengeType === 'ox'}
+      />
       {!isShowingToday && <PixelButton onClick={handleBackToToday}>오늘의 단어로</PixelButton>}
       {!challengeVisible && (
         <>

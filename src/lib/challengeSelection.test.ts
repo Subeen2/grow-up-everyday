@@ -1,4 +1,4 @@
-﻿import { pickRandomChallengeType } from './challengeSelection';
+import { pickRandomChallengeType } from './challengeSelection';
 
 describe('pickRandomChallengeType', () => {
   afterEach(() => {
