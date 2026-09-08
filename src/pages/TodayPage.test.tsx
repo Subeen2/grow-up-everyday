@@ -77,6 +77,7 @@ describe('TodayPage', () => {
   });
 
   it('hides only the English example while the typing challenge is open, keeping the Korean translation as a hint', async () => {
+    vi.spyOn(challengeSelection, 'pickRandomChallengeType').mockReturnValue('typing');
     vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue({
       ...todayEntry,
       exampleEn: 'This place is awesome!',
