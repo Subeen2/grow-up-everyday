@@ -32,6 +32,12 @@ describe('WordCard', () => {
     expect(screen.getByText('이곳 정말 멋지다!')).toBeInTheDocument();
   });
 
+  it('hides the Korean meaning when hideMeaningKo is true, keeping the example visible', () => {
+    render(<WordCard entry={sampleEntry} hideMeaningKo />);
+    expect(screen.queryByText('정말 멋진, 굉장한')).not.toBeInTheDocument();
+    expect(screen.getByText('This place is awesome!')).toBeInTheDocument();
+  });
+
   describe('pronunciation buttons', () => {
     beforeEach(() => {
       vi.spyOn(speech, 'isSpeechSynthesisSupported').mockReturnValue(true);

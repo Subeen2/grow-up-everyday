@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { TodayPage } from './TodayPage';
 import * as wordData from '../lib/wordData';
 import * as reminder from '../lib/reminder';
+import * as challengeSelection from '../lib/challengeSelection';
 import { setPersistedDisplayedWordDate } from '../lib/browsingState';
 
 const todayEntry = {
@@ -18,6 +19,10 @@ const todayEntry = {
 describe('TodayPage', () => {
   beforeEach(() => {
     localStorage.clear();
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   it('shows the word once loaded', async () => {
@@ -96,6 +101,7 @@ describe('TodayPage', () => {
   });
 
   it('shows the typing challenge after clicking "다른 단어 보기", swaps the word on a correct answer, and returns to today on request', async () => {
+    vi.spyOn(challengeSelection, 'pickRandomChallengeType').mockReturnValue('typing');
     const otherEntry = {
       date: '2026-07-20',
       word: 'figure out',
@@ -181,5 +187,70 @@ describe('TodayPage', () => {
 
     await waitFor(() => expect(screen.getByText('awesome')).toBeInTheDocument());
     expect(screen.queryByText('오늘의 단어로')).not.toBeInTheDocument();
+  });
+
+  it('shows the OX challenge when that type is picked, and swaps the word on a correct answer', async () => {
+    const otherEntry = {
+      ...todayEntry,
+      date: '2026-07-20',
+      word: 'figure out',
+      meaningKo: '알아내다',
+      exampleEn: 'Let me figure it out.',
+      exampleKo: '내가 알아낼게.',
+    };
+
+    vi.spyOn(challengeSelection, 'pickRandomChallengeType').mockReturnValue('ox');
+    vi.spyOn(Math, 'random').mockReturnValue(0.9); // wantsFalse = false -> true question
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue(todayEntry);
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-07-23', word: 'awesome', meaningKo: '정말 멋진' },
+      { date: '2026-07-20', word: 'figure out', meaningKo: '알아내다' },
+    ]);
+    vi.spyOn(wordData, 'fetchWordByDate').mockResolvedValue(otherEntry);
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+
+    render(<TodayPage />);
+    await waitFor(() => expect(screen.getByText('awesome')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByText('다른 단어 보기'));
+    expect(screen.getByRole('button', { name: 'O' })).toBeInTheDocument();
+    expect(screen.queryByText('정말 멋진')).not.toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'O' }));
+
+    await waitFor(() => expect(screen.getByText('figure out')).toBeInTheDocument());
+  });
+
+  it('shows the word-order challenge when that type is picked, and swaps the word when tapped in the correct order', async () => {
+    const otherEntry = {
+      ...todayEntry,
+      date: '2026-07-20',
+      word: 'figure out',
+      meaningKo: '알아내다',
+      exampleEn: 'Let me figure it out.',
+      exampleKo: '내가 알아낼게.',
+    };
+
+    vi.spyOn(challengeSelection, 'pickRandomChallengeType').mockReturnValue('order');
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue({ ...todayEntry, exampleEn: 'Take it easy.' });
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-07-23', word: 'awesome', meaningKo: '정말 멋진' },
+      { date: '2026-07-20', word: 'figure out', meaningKo: '알아내다' },
+    ]);
+    vi.spyOn(wordData, 'fetchWordByDate').mockResolvedValue(otherEntry);
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+
+    render(<TodayPage />);
+    await waitFor(() => expect(screen.getByText('awesome')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByText('다른 단어 보기'));
+
+    for (const word of ['Take', 'it', 'easy.']) {
+      await userEvent.click(screen.getByRole('button', { name: word }));
+    }
+
+    await waitFor(() => expect(screen.getByText('figure out')).toBeInTheDocument());
   });
 });

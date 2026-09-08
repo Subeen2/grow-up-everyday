@@ -165,6 +165,57 @@ body {
   color: var(--color-wood-dark);
 }
 
+.ox-challenge {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ox-challenge__prompt {
+  background: #fff;
+  border: 2px solid var(--color-wood-dark);
+  padding: 12px;
+  text-align: center;
+}
+
+.ox-challenge__buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.ox-challenge__wrong {
+  color: #b23b3b;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.word-order-challenge {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.word-order-challenge__assembled {
+  background: #fff;
+  border: 2px solid var(--color-wood-dark);
+  padding: 12px;
+  min-height: 1.5em;
+}
+
+.word-order-challenge__tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.word-order-challenge__wrong {
+  color: #b23b3b;
+  font-size: 0.9rem;
+}
+
 .pull-to-refresh__indicator {
   text-align: center;
   padding: 8px;

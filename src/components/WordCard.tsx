@@ -5,9 +5,10 @@ import { PixelButton } from './PixelButton';
 interface WordCardProps {
   entry: WordEntry;
   hideExampleEn?: boolean;
+  hideMeaningKo?: boolean;
 }
 
-export function WordCard({ entry, hideExampleEn }: WordCardProps) {
+export function WordCard({ entry, hideExampleEn, hideMeaningKo }: WordCardProps) {
   const speechSupported = isSpeechSynthesisSupported();
 
   return (
@@ -15,7 +16,7 @@ export function WordCard({ entry, hideExampleEn }: WordCardProps) {
       <p className="word-card__date">{entry.date}</p>
       <h2 className="word-card__word">{entry.word}</h2>
       <p className="word-card__pronunciation">[{entry.pronunciationKo}]</p>
-      <p className="word-card__meaning">{entry.meaningKo}</p>
+      {!hideMeaningKo && <p className="word-card__meaning">{entry.meaningKo}</p>}
       {!hideExampleEn && <p className="word-card__example-en">{entry.exampleEn}</p>}
       <p className="word-card__example-ko">{entry.exampleKo}</p>
       {speechSupported && (
