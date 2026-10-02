@@ -374,3 +374,121 @@ body {
   font-weight: bold;
   margin-top: 8px;
 }
+
+.explain-panel {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.explain-panel__chat,
+.explain-profile {
+  background: #fff;
+  border: 3px solid var(--color-wood-dark);
+  padding: 12px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.explain-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.explain-panel__edit {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--color-wood-dark);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.explain-panel__messages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.explain-panel__message {
+  white-space: pre-wrap;
+  line-height: 1.5;
+  font-size: 0.95rem;
+}
+
+.explain-panel__message--user {
+  align-self: flex-end;
+  background: var(--color-accent-lavender);
+  padding: 6px 8px;
+}
+
+.explain-panel__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.explain-panel__form {
+  display: flex;
+  gap: 8px;
+}
+
+.explain-panel__input {
+  flex: 1;
+  min-width: 0;
+  font-family: 'Galmuri11', sans-serif;
+  border: 3px solid var(--color-wood-dark);
+  padding: 8px;
+  font-size: 1rem;
+}
+
+.explain-panel__remaining,
+.explain-panel__notice {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-wood-dark);
+}
+
+.explain-panel__error {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #b23b3b;
+  font-size: 0.9rem;
+}
+
+.explain-profile__group {
+  border: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.explain-profile__group--column {
+  flex-direction: column;
+  gap: 6px;
+}
+
+.explain-profile__group legend {
+  margin-bottom: 6px;
+}
+
+.explain-profile__memo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
