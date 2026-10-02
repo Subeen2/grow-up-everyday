@@ -19,9 +19,8 @@ describe('buildPrompt', () => {
     expect(prompt).not.toContain('최근에 이미 다뤘으니');
   });
 
-  it('explicitly warns that the Korean readings must not be translations', () => {
-    const prompt = buildPrompt([]);
-    expect(prompt).toContain('번역이 아니라 발음');
+  it('asks for exampleReading split into phrases so particles can be read correctly', () => {
+    expect(buildPrompt([])).toContain('어절');
   });
 });
 
@@ -29,23 +28,21 @@ describe('parseWordResponse', () => {
   const validJson = JSON.stringify({
     word: ' 大丈夫 ',
     reading: 'だいじょうぶ',
-    readingKo: ' 다이죠부 ',
     meaningKo: '괜찮아',
     exampleJa: '今日は大丈夫です。',
-    exampleReading: 'きょうはだいじょうぶです',
-    exampleReadingKo: ' 쿄와 다이죠부데스 ',
+    exampleReading: 'きょうは だいじょうぶです。',
     exampleKo: '오늘은 괜찮아요.',
   });
 
-  it('returns a trimmed entry for valid JSON', () => {
+  it('returns a trimmed entry with Korean readings derived from the kana readings', () => {
     expect(parseWordResponse(validJson)).toEqual({
       word: '大丈夫',
       reading: 'だいじょうぶ',
-      readingKo: '다이죠부',
+      readingKo: '다이죠-부',
       meaningKo: '괜찮아',
       exampleJa: '今日は大丈夫です。',
-      exampleReading: 'きょうはだいじょうぶです',
-      exampleReadingKo: '쿄와 다이죠부데스',
+      exampleReading: 'きょうは だいじょうぶです。',
+      exampleReadingKo: '쿄-와 다이죠-부데스',
       exampleKo: '오늘은 괜찮아요.',
     });
   });
@@ -59,34 +56,9 @@ describe('parseWordResponse', () => {
     expect(() => parseWordResponse('not json')).toThrow('not valid JSON');
   });
 
-  it('throws when exampleReadingKo is actually a translation of the sentence instead of a phonetic reading', () => {
-    const badJson = JSON.stringify({
-      word: '頑張る',
-      reading: 'がんばる',
-      readingKo: '간바루',
-      meaningKo: '열심히 하다',
-      exampleJa: '試験に向けて頑張ります。',
-      exampleReading: 'しけんにむけてがんばります。',
-      exampleReadingKo: '시험을 위해 열심히 할 거예요.',
-      exampleKo: '시험을 위해 열심히 하겠습니다.',
-    });
-
-    expect(() => parseWordResponse(badJson)).toThrow('looks like a translation');
-  });
-
-  it('throws when readingKo is actually a translation of the word instead of a phonetic reading', () => {
-    const badJson = JSON.stringify({
-      word: '頑張る',
-      reading: 'がんばる',
-      readingKo: '열심히 하다',
-      meaningKo: '열심히 하다',
-      exampleJa: '試験に向けて頑張ります。',
-      exampleReading: 'しけんにむけてがんばります。',
-      exampleReadingKo: '시켄니 무케테 간바리마스',
-      exampleKo: '시험을 위해 열심히 하겠습니다.',
-    });
-
-    expect(() => parseWordResponse(badJson)).toThrow('looks like a translation');
+  it('throws when exampleReading still contains kanji', () => {
+    const badJson = JSON.stringify({ ...JSON.parse(validJson), exampleReading: 'きょうは 大丈夫です。' });
+    expect(() => parseWordResponse(badJson)).toThrow('Cannot convert');
   });
 });
 
@@ -113,11 +85,9 @@ describe('generateWordEntry', () => {
                   content: JSON.stringify({
                     word: '大丈夫',
                     reading: 'だいじょうぶ',
-                    readingKo: '다이죠부',
                     meaningKo: '괜찮아',
                     exampleJa: '今日は大丈夫です。',
-                    exampleReading: 'きょうはだいじょうぶです',
-                    exampleReadingKo: '쿄와 다이죠부데스',
+                    exampleReading: 'きょうは だいじょうぶです',
                     exampleKo: '오늘은 괜찮아요.',
                   }),
                 },
