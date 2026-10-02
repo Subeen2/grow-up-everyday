@@ -222,4 +222,30 @@ describe('ExplainPanel', () => {
     expect(sentBody(1).profile.knowsKanji).toBe(true);
     expect(sentBody(1).messages).toEqual([]);
   });
+
+  it('offers retry when the first explanation fails on the network', async () => {
+    localStorage.setItem('learnerProfile:ja', JSON.stringify(savedJaProfile));
+    (fetch as any).mockRejectedValueOnce(new TypeError('Failed to fetch')).mockResolvedValueOnce(ok('다시 받은 설명'));
+    renderJa();
+
+    await userEvent.click(screen.getByRole('button', { name: '💡 내 수준에 맞게 설명' }));
+    expect(await screen.findByText('인터넷 연결이 필요해요')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '다시 시도' }));
+
+    expect(await screen.findByText(/다시 받은 설명/)).toBeInTheDocument();
+  });
+
+  it('disables profile editing while a request is in flight', async () => {
+    localStorage.setItem('learnerProfile:ja', JSON.stringify(savedJaProfile));
+    let resolveFetch!: (value: unknown) => void;
+    (fetch as any).mockReturnValueOnce(new Promise((resolve) => (resolveFetch = resolve)));
+    renderJa();
+
+    await userEvent.click(screen.getByRole('button', { name: '💡 내 수준에 맞게 설명' }));
+    expect(screen.getByRole('button', { name: /내 수준: 히라가나 · 수정/ })).toBeDisabled();
+
+    resolveFetch(ok('첫 설명'));
+    await screen.findByText(/첫 설명/);
+    expect(screen.getByRole('button', { name: /내 수준: 히라가나 · 수정/ })).toBeEnabled();
+  });
 });

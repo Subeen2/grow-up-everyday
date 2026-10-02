@@ -14,7 +14,7 @@
 
 - 신규 npm 의존성 추가 금지. Worker는 OpenAI SDK 없이 `fetch`로 호출, `wrangler`는 `npx wrangler`로만 사용
 - 모델 `gpt-4o-mini`, `max_tokens: 500`, OpenAI 타임아웃 15초
-- 한도: 메모 ≤ 100자, 질문 ≤ 200자, assistant 메시지 ≤ 2000자, entry 문자열 필드 ≤ 200자, 관련 단어 ≤ 5개, 후속 질문 ≤ 5회(첫 설명 별도), 요청 본문 ≤ 8KB, IP당 하루 30회
+- 한도: 메모 ≤ 100자, 질문 ≤ 200자, assistant 메시지 ≤ 2000자, entry 문자열 필드 ≤ 200자, 관련 단어 ≤ 5개, 후속 질문 ≤ 5회(첫 설명 별도), 요청 본문 ≤ 48KB, IP당 하루 30회
 - 상태코드 → 화면 문구: 429 "오늘 질문을 다 썼어요. 내일 다시 와주세요" / 5xx "잠깐 문제가 생겼어요" + [다시 시도] / fetch 실패 "인터넷 연결이 필요해요" / 400·403 "요청을 처리할 수 없어요"
 - 프로필 localStorage 키: `learnerProfile:ja`, `learnerProfile:en`. 모든 접근은 try/catch
 - `VITE_EXPLAIN_API_URL`이 비어 있으면 `ExplainPanel`은 `null` 렌더링 (기존 테스트·로컬 개발 무영향). 값은 렌더 시점에 읽는다 (`vi.stubEnv`로 테스트 가능하도록)

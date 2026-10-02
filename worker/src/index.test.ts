@@ -54,9 +54,18 @@ describe('worker fetch', () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
-  it('rejects bodies over 8KB', async () => {
-    const res = await worker.fetch(post('x'.repeat(8193)), makeEnv());
+  it('rejects bodies over 48KB', async () => {
+    const res = await worker.fetch(post('x'.repeat(49153)), makeEnv());
     expect(res.status).toBe(400);
+  });
+
+  it('accepts a conversation at the validator limits (Korean is 3 bytes per character)', async () => {
+    const messages = [];
+    for (let i = 0; i < 5; i++) {
+      messages.push({ role: 'assistant', content: '가'.repeat(2000) }, { role: 'user', content: '나'.repeat(200) });
+    }
+    const res = await worker.fetch(post({ ...jaRequest, messages }), makeEnv());
+    expect(res.status).toBe(200);
   });
 
   it('rejects invalid JSON and invalid requests without counting them', async () => {

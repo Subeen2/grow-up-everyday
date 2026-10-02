@@ -205,7 +205,7 @@ interface ExplainRequest {
 ### 5.2 처리 순서
 
 1. `OPTIONS` → CORS preflight 응답. `Origin`이 `ALLOWED_ORIGINS`(환경변수, 쉼표 구분: Pages 도메인 + `http://localhost:5173`)에 없으면 **403**.
-2. 본문 8KB 초과 → **400**.
+2. 본문 48KB 초과 (한글은 JSON에서 글자당 3바이트라 필드 한도 최대치가 약 40KB) → **400**.
 3. 검증 실패 → **400**:
    - `language` 값, 프로필 필드 타입, `memo` ≤ 100자
    - `entry` 각 문자열 필드 ≤ 200자

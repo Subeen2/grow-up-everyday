@@ -130,7 +130,12 @@ export function ExplainPanel(props: ExplainPanelProps) {
         <div className="explain-panel__chat">
           <div className="explain-panel__header">
             <span>💡 내 수준 설명</span>
-            <button type="button" className="explain-panel__edit" onClick={() => setMode('profile')}>
+            <button
+              type="button"
+              className="explain-panel__edit"
+              onClick={() => setMode('profile')}
+              disabled={loading}
+            >
               내 수준: {describeProfile(profile)} · 수정
             </button>
           </div>
@@ -148,7 +153,7 @@ export function ExplainPanel(props: ExplainPanelProps) {
           {error && (
             <div className="explain-panel__error" role="alert">
               <span>{EXPLAIN_ERROR_MESSAGES[error]}</span>
-              {error === 'server' && (
+              {(error === 'server' || error === 'network') && (
                 <PixelButton onClick={() => ask(profile, messages, failedQuestion)}>다시 시도</PixelButton>
               )}
             </div>

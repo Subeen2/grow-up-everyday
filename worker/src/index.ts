@@ -12,7 +12,9 @@ export interface Env {
   RATE_LIMIT: KvStore;
 }
 
-const BODY_MAX_BYTES = 8192;
+// 필드별 한도(assistant 2000자 × 5 등)가 실제 크기를 묶고, 이 값은 그보다 큰 쓰레기 요청만 거른다.
+// 한글은 JSON에서 글자당 3바이트라 최대 정상 요청이 약 40KB다.
+const BODY_MAX_BYTES = 48 * 1024;
 const DAILY_LIMIT_PER_IP = 30;
 const OPENAI_TIMEOUT_MS = 15000;
 const ONE_DAY_SECONDS = 86400;
