@@ -11,6 +11,7 @@
   - 일본어: 브라우저 음성인식(Web Speech API)으로 예문을 소리 내어 말해서 정답 판정 (Chrome/Edge 필요)
 - **발음 듣기**: 단어/예문 옆 🔊 버튼으로 브라우저 내장 음성합성(TTS)으로 발음을 들을 수 있습니다 (영어/일본어 모두 지원).
 - **일본어 한글 발음 표기**: 단어와 예문 아래에 히라가나 표기와 함께 한글 발음표기를 같이 보여줍니다.
+- **내 수준 맞춤 설명**: 단어 카드의 💡 버튼으로 내가 아는 수준(예: 히라가나만 앎)을 입력하면, 그 수준에 맞춘 설명을 받고 채팅으로 추가 질문할 수 있습니다 (단어당 5회).
 - 신규 단어 알림(🔔), pull-to-refresh 등 부가 기능 포함.
 
 ## 로컬 개발
@@ -61,6 +62,32 @@ npm run generate:word:ja
 3. 저장소 Settings > Pages 에서 Source를 "GitHub Actions"로 설정합니다.
 4. Actions 탭에서 `Generate Daily Word` 워크플로우를 `workflow_dispatch`로 한 번 수동 실행해 정상 동작을 확인합니다.
 5. main에 push되면 `Deploy to GitHub Pages` 워크플로우가 자동으로 사이트를 배포합니다.
+
+## 맞춤 설명(💡) 기능 설정 (수동, 1회)
+
+단어 카드의 "💡 내 수준에 맞게 설명"은 Cloudflare Worker(`worker/`)를 통해 OpenAI를 호출합니다. Worker 주소가 설정되지 않으면 버튼이 보이지 않습니다.
+
+1. Cloudflare 가입 후 로그인
+   ```bash
+   cd worker
+   npx wrangler login
+   ```
+2. 횟수 제한용 KV 생성 후, 출력된 id를 `worker/wrangler.toml`의 `REPLACE_WITH_KV_NAMESPACE_ID` 자리에 넣습니다.
+   ```bash
+   npx wrangler kv namespace create RATE_LIMIT
+   ```
+3. OpenAI 키 등록 (단어 생성용과 같은 키, 절대 커밋하지 않습니다)
+   ```bash
+   npx wrangler secret put OPENAI_API_KEY
+   ```
+4. 배포 후 출력된 Worker 주소(`https://....workers.dev`)를 확인합니다.
+   ```bash
+   npx wrangler deploy
+   ```
+5. GitHub 저장소 Settings > Secrets and variables > Actions > **Variables**에 `VITE_EXPLAIN_API_URL` = Worker 주소를 등록하고, Deploy 워크플로를 다시 실행합니다.
+6. OpenAI 대시보드에서 월 사용 한도를 설정합니다 (권장 $5). Worker는 IP당 하루 30회로 제한하지만, 최종 비용 상한은 이 한도입니다.
+
+로컬에서 확인하려면 `.env`에 `VITE_EXPLAIN_API_URL=<Worker 주소>`를 추가하고 `npm run dev` (Worker의 `ALLOWED_ORIGINS`에 `http://localhost:5173`이 포함되어 있어야 합니다).
 
 ## 매일 단어 생성 방식
 

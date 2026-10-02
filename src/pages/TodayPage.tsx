@@ -3,6 +3,7 @@ import { fetchTodayWord, fetchArchiveIndex, fetchWordByDate } from '../lib/wordD
 import { useWordOfDayState } from '../lib/useWordOfDayState';
 import { pickRandomChallengeType, ChallengeType } from '../lib/challengeSelection';
 import { WordCard } from '../components/WordCard';
+import { ExplainPanel } from '../components/ExplainPanel';
 import { PixelButton } from '../components/PixelButton';
 import { TypingChallenge } from '../components/TypingChallenge';
 import { OxChallenge } from '../components/OxChallenge';
@@ -34,6 +35,9 @@ export function TodayPage() {
         hideExampleEn={challengeVisible && challengeType !== 'ox'}
         hideMeaningKo={challengeVisible && challengeType === 'ox'}
       />
+      {!challengeVisible && (
+        <ExplainPanel key={displayedEntry.date} language="en" entry={displayedEntry} archivePool={archivePool} />
+      )}
       {!isShowingToday && <PixelButton onClick={handleBackToToday}>오늘의 단어로</PixelButton>}
       {!challengeVisible && (
         <>

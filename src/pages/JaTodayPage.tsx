@@ -1,6 +1,7 @@
 import { fetchTodayWord, fetchArchiveIndex, fetchWordByDate } from '../lib/jaWordData';
 import { useWordOfDayState } from '../lib/useWordOfDayState';
 import { JaWordCard } from '../components/JaWordCard';
+import { ExplainPanel } from '../components/ExplainPanel';
 import { PixelButton } from '../components/PixelButton';
 import { VoiceChallenge } from '../components/VoiceChallenge';
 import { Celebration } from '../components/Celebration';
@@ -20,6 +21,9 @@ export function JaTodayPage() {
     <div>
       {isNew && isShowingToday && <span className="new-badge">NEW</span>}
       <JaWordCard entry={displayedEntry} hideExampleJa={challengeVisible} />
+      {!challengeVisible && (
+        <ExplainPanel key={displayedEntry.date} language="ja" entry={displayedEntry} archivePool={archivePool} />
+      )}
       {!isShowingToday && <PixelButton onClick={handleBackToToday}>오늘의 단어로</PixelButton>}
       {!challengeVisible && (
         <>

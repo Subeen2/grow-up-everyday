@@ -134,4 +134,21 @@ describe('JaTodayPage', () => {
     await waitFor(() => expect(screen.getByText('大丈夫')).toBeInTheDocument());
     expect(screen.queryByText('오늘의 단어로')).not.toBeInTheDocument();
   });
+
+  it('shows the explain button and hides it while the voice challenge is open', async () => {
+    vi.stubEnv('VITE_EXPLAIN_API_URL', 'https://explain.test');
+    vi.spyOn(jaWordData, 'fetchTodayWord').mockResolvedValue(todayEntry);
+    vi.spyOn(jaWordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: '2026-08-04', word: '大丈夫', meaningKo: '괜찮아' },
+      { date: '2026-08-03', word: '頑張る', meaningKo: '힘내다' },
+    ]);
+
+    render(<JaTodayPage />);
+
+    expect(await screen.findByRole('button', { name: '💡 내 수준에 맞게 설명' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '다른 단어 보기' }));
+    expect(screen.queryByRole('button', { name: '💡 내 수준에 맞게 설명' })).not.toBeInTheDocument();
+
+    vi.unstubAllEnvs();
+  });
 });

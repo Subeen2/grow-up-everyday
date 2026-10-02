@@ -254,4 +254,23 @@ describe('TodayPage', () => {
 
     await waitFor(() => expect(screen.getByText('figure out')).toBeInTheDocument());
   });
+
+  it('shows the explain button and hides it while a challenge is open', async () => {
+    vi.stubEnv('VITE_EXPLAIN_API_URL', 'https://explain.test');
+    vi.spyOn(wordData, 'fetchTodayWord').mockResolvedValue(todayEntry);
+    vi.spyOn(wordData, 'fetchArchiveIndex').mockResolvedValue([
+      { date: todayEntry.date, word: todayEntry.word, meaningKo: todayEntry.meaningKo },
+      { date: '2026-07-01', word: 'figure out', meaningKo: '알아내다' },
+    ]);
+    vi.spyOn(reminder, 'isNewDaySinceLastView').mockReturnValue(false);
+    vi.spyOn(reminder, 'setLastViewedDate').mockImplementation(() => {});
+
+    render(<TodayPage />);
+
+    expect(await screen.findByRole('button', { name: '💡 내 수준에 맞게 설명' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '다른 단어 보기' }));
+    expect(screen.queryByRole('button', { name: '💡 내 수준에 맞게 설명' })).not.toBeInTheDocument();
+
+    vi.unstubAllEnvs();
+  });
 });

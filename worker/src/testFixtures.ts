@@ -1,6 +1,6 @@
 import type { ChatMessage, ExplainRequest } from '../../src/lib/explainContract';
 
-export const jaRequest: ExplainRequest = {
+export const jaRequest: Extract<ExplainRequest, { language: 'ja' }> = {
   language: 'ja',
   profile: { knowsHiragana: true, knowsKatakana: false, knowsKanji: false, memo: '' },
   entry: {
@@ -18,7 +18,7 @@ export const jaRequest: ExplainRequest = {
   messages: [],
 };
 
-export const enRequest: ExplainRequest = {
+export const enRequest: Extract<ExplainRequest, { language: 'en' }> = {
   language: 'en',
   profile: { level: 'beginner', readsIpa: false, memo: '' },
   entry: {
