@@ -67,6 +67,7 @@ export function buildDigestPrompt(posts, sections) {
     '2. CHANGELOG는 사용자에게 의미 있는 새 기능·변화가 있는 버전만 골라 요약해. 사소한 버그 수정만 있는 버전은 생략해.',
     '3. 각 summary는 한국어 1~2문장. headline은 이번 주 가장 중요한 소식 3개를 한 줄씩. trend는 이번 주 흐름 해석 2~4문장.',
     '4. 블로그 글은 대괄호 안 번호를 blogId로, CHANGELOG는 버전 문자열을 changelogVersion으로 써. URL은 쓰지 마.',
+    '5. changelogVersion 항목의 summary는 그 버전 본문에 적힌 내용만 근거로 써. 블로그 글 내용을 CHANGELOG 항목에 섞지 마. Claude Code 관련 블로그 글은 blogId로 code에 넣어.',
     '반드시 아래 JSON 형식으로만 응답해:',
     '{"headline": string[], "cowork": [{"blogId": number, "summary": string}], "code": [{"blogId": number, "summary": string} 또는 {"changelogVersion": string, "summary": string}], "trend": string}',
     '',

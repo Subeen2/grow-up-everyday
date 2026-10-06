@@ -1,0 +1,32 @@
+name: Weekly Claude Trend Digest
+
+on:
+  schedule:
+    - cron: '0 23 * * 0' # 매주 일 23:00 UTC = 월 08:00 KST
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm ci
+      - run: node scripts/trend-digest.mjs
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          DIGEST_TO_EMAIL: ${{ secrets.DIGEST_TO_EMAIL }}
+          TZ: Asia/Seoul
+      - name: Commit digest state
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/trend-state.json
+          git diff --cached --quiet || git commit -m "chore: update trend digest state"
+          git push

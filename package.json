@@ -11,6 +11,7 @@
     "test:watch": "vitest",
     "generate:word": "node scripts/generate-word.mjs",
     "generate:word:ja": "node scripts/generate-word-ja.mjs",
+    "trend:digest": "node scripts/trend-digest.mjs",
     "backfill:game-examples": "node scripts/backfill-game-examples.mjs",
     "backfill:game-examples:ja": "node scripts/backfill-game-examples-ja.mjs",
     "generate:icons": "node scripts/generate-placeholder-icons.mjs"
