@@ -45,6 +45,11 @@ describe('parsePostMeta', () => {
     });
   });
 
+  it('decodes numeric entities in decimal and hex', () => {
+    const meta = '<meta content="Claude&#8217;s plan &#x2F; next&#8230;" property="og:title"/>';
+    expect(parsePostMeta(meta, 'x').title).toBe('Claude’s plan / next…');
+  });
+
   it('falls back to slug and empty strings when meta is missing', () => {
     expect(parsePostMeta('<html></html>', 'some-post')).toEqual({
       slug: 'some-post',

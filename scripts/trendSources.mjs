@@ -16,6 +16,7 @@ function decodeEntities(text) {
     .replace(/&#39;|&#x27;/g, "'")
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
+    .replace(/&#(x?)([0-9a-f]+);/gi, (_, hex, n) => String.fromCodePoint(parseInt(n, hex ? 16 : 10)))
     .replace(/&amp;/g, '&');
 }
 

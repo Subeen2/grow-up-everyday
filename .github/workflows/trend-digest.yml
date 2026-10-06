@@ -8,6 +8,11 @@ on:
 permissions:
   contents: write
 
+# 수동 실행과 예약 실행이 겹쳐 같은 다이제스트를 두 번 보내지 않도록 한다.
+concurrency:
+  group: trend-digest
+  cancel-in-progress: false
+
 jobs:
   digest:
     runs-on: ubuntu-latest
@@ -29,4 +34,6 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/trend-state.json
           git diff --cached --quiet || git commit -m "chore: update trend digest state"
+          # 메일은 이미 보냈으므로 push가 실패하면 다음 주에 같은 메일이 다시 간다. 실행 중 main에 다른 커밋이 생겨도 push되게 rebase한다.
+          git pull --rebase
           git push
