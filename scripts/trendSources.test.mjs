@@ -1,8 +1,14 @@
 import {
+  BLOG_BASE,
+  CHANGELOG_PAGE_URL,
   extractBlogSlugs,
   parsePostMeta,
   parseChangelogSections,
   selectNewSections,
+  buildDigestPrompt,
+  buildDigest,
+  renderDigestHtml,
+  nextState,
 } from './trendSources.mjs';
 
 describe('extractBlogSlugs', () => {
@@ -76,5 +82,97 @@ describe('selectNewSections', () => {
 
   it('caps at limit when last seen version no longer exists', () => {
     expect(selectNewSections(sections, '0.9', 2).map((s) => s.version)).toEqual(['5', '4']);
+  });
+});
+
+const posts = [
+  { slug: 'cowork-is-now-claude', title: 'Cowork 통합', description: '설명 A', date: 'Sep 16, 2026' },
+  { slug: 'claude-for-financial-advisors', title: '금융 자문', description: '설명 B', date: '' },
+];
+const sections = [{ version: '2.1.290', body: '- Added X' }];
+
+describe('buildDigestPrompt', () => {
+  it('lists posts with ids and changelog versions', () => {
+    const prompt = buildDigestPrompt(posts, sections);
+    expect(prompt).toContain('[0] Cowork 통합 — 설명 A (Sep 16, 2026)');
+    expect(prompt).toContain('[1] 금융 자문 — 설명 B');
+    expect(prompt).toContain('### 2.1.290\n- Added X');
+  });
+
+  it('marks empty sources', () => {
+    const prompt = buildDigestPrompt([], []);
+    expect(prompt.match(/\(없음\)/g)).toHaveLength(2);
+  });
+});
+
+describe('buildDigest', () => {
+  it('resolves blog ids and changelog versions to links from collected data', () => {
+    const raw = JSON.stringify({
+      headline: ['핵심1', '핵심2', '핵심3'],
+      cowork: [{ blogId: 0, summary: ' 코워크 요약 ' }],
+      code: [{ changelogVersion: '2.1.290', summary: '코드 요약' }],
+      trend: '흐름',
+    });
+    expect(buildDigest(raw, posts, sections)).toEqual({
+      headline: ['핵심1', '핵심2', '핵심3'],
+      cowork: [{ title: 'Cowork 통합', url: `${BLOG_BASE}/cowork-is-now-claude`, summary: '코워크 요약' }],
+      code: [{ title: 'Claude Code 2.1.290', url: CHANGELOG_PAGE_URL, summary: '코드 요약' }],
+      trend: '흐름',
+    });
+  });
+
+  it('drops unknown ids, invalid summaries and non-array fields without crashing', () => {
+    const raw = JSON.stringify({
+      headline: 'not an array',
+      cowork: [{ blogId: 9, summary: 'x' }, { blogId: 0, summary: 42 }, { blogId: '0', summary: 'y' }],
+      code: { changelogVersion: '2.1.290', summary: 'z' },
+      trend: null,
+    });
+    expect(buildDigest(raw, posts, sections)).toEqual({ headline: [], cowork: [], code: [], trend: '' });
+  });
+
+  it('throws on non-JSON response', () => {
+    expect(() => buildDigest('not json', posts, sections)).toThrow();
+  });
+});
+
+describe('renderDigestHtml', () => {
+  const digest = {
+    headline: ['<b>핵심</b> & "강조"'],
+    cowork: [{ title: 'T<1>', url: `${BLOG_BASE}/a`, summary: '<script>alert(1)</script>' }],
+    code: [],
+    trend: '흐름',
+  };
+
+  it('escapes LLM text and includes links', () => {
+    const html = renderDigestHtml(digest, '2026-10-12');
+    expect(html).toContain('&lt;b&gt;핵심&lt;/b&gt; &amp; &quot;강조&quot;');
+    expect(html).toContain('&lt;script&gt;');
+    expect(html).not.toContain('<script>');
+    expect(html).toContain(`href="${BLOG_BASE}/a"`);
+    expect(html).toContain('2026-10-12');
+  });
+
+  it('omits empty sections', () => {
+    const html = renderDigestHtml(digest, '2026-10-12');
+    expect(html).toContain('Cowork 소식');
+    expect(html).not.toContain('Claude Code 소식');
+  });
+});
+
+describe('nextState', () => {
+  it('marks every listing slug as seen, not only processed ones (first run)', () => {
+    expect(nextState(null, ['a', 'b', 'c', 'd', 'e', 'f'], '2.1.290')).toEqual({
+      seenBlogSlugs: ['a', 'b', 'c', 'd', 'e', 'f'],
+      lastChangelogVersion: '2.1.290',
+    });
+  });
+
+  it('keeps previously seen slugs and adds new ones', () => {
+    const prev = { seenBlogSlugs: ['old', 'a'], lastChangelogVersion: '2.1.280' };
+    expect(nextState(prev, ['new', 'a'], '2.1.290')).toEqual({
+      seenBlogSlugs: ['old', 'a', 'new'],
+      lastChangelogVersion: '2.1.290',
+    });
   });
 });
