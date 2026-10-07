@@ -16,8 +16,23 @@ function toRelatedWord(metadata: Record<string, unknown> | undefined): RelatedWo
   return { word, meaningKo };
 }
 
-// null이면 호출부가 클라이언트가 보낸 목록을 그대로 쓴다. 검색 실패가 설명 기능을 막으면 안 되므로 예외도 null로 바꾼다.
+const LOOKUP_TIMEOUT_MS = 1500;
+
+// null이면 호출부가 클라이언트가 보낸 목록을 그대로 쓴다. 검색 실패·지연이 설명 기능을 막으면 안 되므로
+// 예외와 시간 초과도 null로 바꾼다.
 export async function findSimilarEnWords(index: VectorIndex, date: string): Promise<RelatedWord[] | null> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<null>((resolve) => {
+    timer = setTimeout(() => resolve(null), LOOKUP_TIMEOUT_MS);
+  });
+  try {
+    return await Promise.race([lookup(index, date), timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function lookup(index: VectorIndex, date: string): Promise<RelatedWord[] | null> {
   try {
     const [self] = await index.getByIds([date]);
     if (!self) return null;

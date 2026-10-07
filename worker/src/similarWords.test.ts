@@ -62,6 +62,16 @@ describe('findSimilarEnWords', () => {
     expect(await findSimilarEnWords(makeIndex([match(DATE, 'figure out', '알아내다')]), DATE)).toBeNull();
   });
 
+  it('returns null when the index does not answer within 1.5s', async () => {
+    vi.useFakeTimers();
+    const index = makeIndex([]);
+    index.getByIds.mockImplementationOnce(() => new Promise(() => {}));
+    const result = findSimilarEnWords(index, DATE);
+    await vi.advanceTimersByTimeAsync(1500);
+    expect(await result).toBeNull();
+    vi.useRealTimers();
+  });
+
   it('returns null when the index throws', async () => {
     const index = makeIndex([]);
     index.getByIds.mockRejectedValueOnce(new Error('vectorize down'));
