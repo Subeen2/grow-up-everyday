@@ -1,5 +1,6 @@
 import { validateExplainRequest } from './validate';
 import { buildOpenAiMessages } from './prompt';
+import { findSimilarEnWords, VectorIndex } from './similarWords';
 
 export interface KvStore {
   get(key: string): Promise<string | null>;
@@ -10,6 +11,7 @@ export interface Env {
   OPENAI_API_KEY: string;
   ALLOWED_ORIGINS: string; // 쉼표 구분
   RATE_LIMIT: KvStore;
+  EN_WORDS?: VectorIndex; // 없으면 클라이언트가 보낸 관련 단어를 그대로 쓴다
 }
 
 // 필드별 한도(assistant 2000자 × 5 등)가 실제 크기를 묶고, 이 값은 그보다 큰 쓰레기 요청만 거른다.
@@ -79,8 +81,14 @@ export default {
     // ponytail: KV get→put is not atomic, so concurrent requests can slip a few past the limit; move to Durable Objects if the limit must be exact
     await env.RATE_LIMIT.put(key, String(used + 1), { expirationTtl: ONE_DAY_SECONDS });
 
+    let promptReq = req;
+    if (req.language === 'en' && env.EN_WORDS) {
+      const similar = await findSimilarEnWords(env.EN_WORDS, req.entry.date);
+      if (similar) promptReq = { ...req, relatedWords: similar };
+    }
+
     try {
-      const reply = await callOpenAi(env.OPENAI_API_KEY, buildOpenAiMessages(req));
+      const reply = await callOpenAi(env.OPENAI_API_KEY, buildOpenAiMessages(promptReq));
       return json({ reply }, 200, origin);
     } catch {
       return json({ error: 'upstream' }, 502, origin);
