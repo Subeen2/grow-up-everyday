@@ -1,6 +1,7 @@
 // @vitest-environment node
 import worker, { Env } from './index';
-import { jaRequest } from './testFixtures';
+import { enRequest, jaRequest } from './testFixtures';
+import type { VectorIndex } from './similarWords';
 
 const ORIGIN = 'https://subeen2.github.io';
 
@@ -15,8 +16,8 @@ function makeKv(initial: Record<string, string> = {}) {
   };
 }
 
-function makeEnv(kv = makeKv()): Env {
-  return { OPENAI_API_KEY: 'sk-test', ALLOWED_ORIGINS: `${ORIGIN}, http://localhost:5173`, RATE_LIMIT: kv };
+function makeEnv(kv = makeKv(), enWords?: VectorIndex): Env {
+  return { OPENAI_API_KEY: 'sk-test', ALLOWED_ORIGINS: `${ORIGIN}, http://localhost:5173`, RATE_LIMIT: kv, EN_WORDS: enWords };
 }
 
 function post(body: unknown, origin = ORIGIN) {
@@ -112,5 +113,41 @@ describe('worker fetch', () => {
 
     (fetch as any).mockImplementationOnce(async () => openAiReply('   '));
     expect((await worker.fetch(post(jaRequest), makeEnv())).status).toBe(502);
+  });
+
+  describe('English related words', () => {
+    const clientRequest = { ...enRequest, relatedWords: [{ word: 'recent', meaningKo: '최근' }] };
+
+    function makeIndex(): VectorIndex & { getByIds: ReturnType<typeof vi.fn>; query: ReturnType<typeof vi.fn> } {
+      return {
+        getByIds: vi.fn(async () => [{ id: enRequest.entry.date, values: [0.1] }]),
+        query: vi.fn(async () => ({
+          matches: [{ id: '2026-08-01', metadata: { word: 'relax', meaningKo: '긴장을 풀다' } }],
+        })),
+      };
+    }
+
+    const systemPrompt = () => JSON.parse((fetch as any).mock.calls[0][1].body).messages[0].content as string;
+
+    it('uses vector search results for English requests', async () => {
+      const res = await worker.fetch(post(clientRequest), makeEnv(makeKv(), makeIndex()));
+      expect(res.status).toBe(200);
+      expect(systemPrompt()).toContain('<관련 단어> relax(긴장을 풀다) </관련 단어>');
+    });
+
+    it('falls back to client related words when vector search fails', async () => {
+      const index = makeIndex();
+      index.getByIds.mockRejectedValueOnce(new Error('down'));
+      const res = await worker.fetch(post(clientRequest), makeEnv(makeKv(), index));
+      expect(res.status).toBe(200);
+      expect(systemPrompt()).toContain('<관련 단어> recent(최근) </관련 단어>');
+    });
+
+    it('does not query the index for Japanese requests', async () => {
+      const index = makeIndex();
+      await worker.fetch(post(jaRequest), makeEnv(makeKv(), index));
+      expect(index.getByIds).not.toHaveBeenCalled();
+      expect(systemPrompt()).toContain('試験(시험)');
+    });
   });
 });
