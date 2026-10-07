@@ -18,6 +18,13 @@ describe('buildSystemPrompt', () => {
     expect(prompt).toContain('<관련 단어> 없음 </관련 단어>');
   });
 
+  // "전에 배운 단어 중 비슷한 표현?" 같은 학습 질문을 범위 밖으로 오판해 거절한 사례가 있었다.
+  it('tells the model that related words are past lessons and that comparing them is in scope', () => {
+    const prompt = buildSystemPrompt(enRequest);
+    expect(prompt).toContain('<관련 단어>는 학습자가 전에 배운 단어');
+    expect(prompt).toMatch(/비슷한 표현.*전에 배운 단어.*답할 것/);
+  });
+
   it('strips angle brackets from the memo so it cannot close its block', () => {
     const prompt = buildSystemPrompt({
       ...jaRequest,
