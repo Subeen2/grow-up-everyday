@@ -1,8 +1,9 @@
 name: Weekly Claude Trend Digest
 
+# 2026-10-14 사용자 결정으로 예약 실행 중단 (의사결정 과정 D-15). 다시 쓰려면 아래 schedule을 되살린다.
+#   schedule:
+#     - cron: '0 23 * * 0' # 매주 일 23:00 UTC = 월 08:00 KST
 on:
-  schedule:
-    - cron: '0 23 * * 0' # 매주 일 23:00 UTC = 월 08:00 KST
   workflow_dispatch: {}
 
 permissions:

@@ -102,9 +102,9 @@ npm run generate:word:ja
 
 로컬에서 확인하려면 `.env`에 `VITE_EXPLAIN_API_URL=<Worker 주소>`를 추가하고 `npm run dev` (Worker의 `ALLOWED_ORIGINS`에 `http://localhost:5173`이 포함되어 있어야 합니다).
 
-## 주간 Claude 트렌드 메일 설정 (수동, 1회)
+## 주간 Claude 트렌드 메일 (현재 중단)
 
-`scripts/trend-digest.mjs`가 매주 월요일 08:00(KST)에 Claude 블로그와 Claude Code CHANGELOG의 새 글을 모아 한국어로 요약해 메일로 보냅니다. 앱과는 별개인 운영 자동화입니다.
+`scripts/trend-digest.mjs`는 Claude 블로그와 Claude Code CHANGELOG의 새 글을 모아 한국어로 요약해 메일로 보냅니다. 앱과는 별개인 운영 자동화이며, 지금은 예약 실행을 꺼두었습니다. 다시 쓰려면 아래 설정 후 `.github/workflows/trend-digest.yml`의 `schedule` 주석을 풉니다 (매주 월요일 08:00 KST).
 
 1. [Resend](https://resend.com)에 가입하고 API 키를 만듭니다. 발신 주소는 `onboarding@resend.dev`를 쓰므로 **Resend 가입 이메일로만** 받을 수 있습니다.
 2. GitHub Actions **Secrets**에 등록합니다 (별도 터미널에서 프롬프트로 입력). 수신 주소도 저장소에 커밋하지 않습니다.
