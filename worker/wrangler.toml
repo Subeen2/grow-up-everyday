@@ -1,6 +1,8 @@
 name = "grow-up-everyday-explain"
 main = "src/index.ts"
 compatibility_date = "2026-10-01"
+# 2026-10-14 맞춤 설명 중단 (의사결정 과정 D-16): 공개 주소를 닫아 외부 호출 비용을 없앤다. 다시 켜려면 true로 바꾸고 deploy.
+workers_dev = false
 
 [vars]
 ALLOWED_ORIGINS = "https://subeen2.github.io,http://localhost:5173"

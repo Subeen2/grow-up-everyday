@@ -66,6 +66,8 @@ npm run generate:word:ja
 
 ## 맞춤 설명(💡) 기능 설정 (수동, 1회)
 
+> 현재 중단 상태입니다 (`worker/wrangler.toml`의 `workers_dev = false`, 변수 `VITE_EXPLAIN_API_URL` 없음). 다시 켜려면 `workers_dev = true`로 배포하고 아래 6번을 다시 합니다.
+
 단어 카드의 "💡 내 수준에 맞게 설명"은 Cloudflare Worker(`worker/`)를 통해 OpenAI를 호출합니다. Worker 주소가 설정되지 않으면 버튼이 보이지 않습니다.
 
 1. Cloudflare 가입 후 이메일 인증까지 마치고 로그인합니다 (인증 전에는 Worker 배포가 거부됩니다).
